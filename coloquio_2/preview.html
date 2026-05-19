@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio Interactivo - Coloquio N° 2</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --text: #333;
+            --bg: #f4f7f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            width: 300px;
+            flex-shrink: 0; /* Prevents sidebar from squashing */
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        #sidebar h2 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            flex-shrink: 0;
+        }
+
+        #colloquium-container {
+            flex-grow: 1;
+            overflow-y: auto; /* Allows the menu to scroll if it's too long */
+            padding-right: 5px;
+        }
+
+        .colloquium-group {
+            margin-bottom: 10px;
+        }
+
+        .colloquium-header {
+            padding: 10px;
+            background-color: var(--secondary);
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .colloquium-header:hover {
+            background-color: var(--accent);
+        }
+
+        .exercise-list {
+            list-style: none;
+            padding-left: 15px;
+            display: none; /* Hidden by default */
+            margin-top: 5px;
+        }
+
+        .exercise-list.expanded {
+            display: block;
+        }
+
+        .exercise-item {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .exercise-item:hover {
+            background-color: var(--secondary);
+        }
+
+        .exercise-item.active {
+            background-color: var(--accent);
+        }
+
+        /* Main Content */
+        #main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h1 { color: var(--primary); margin-bottom: 15px; }
+        h2 { color: var(--accent); margin-bottom: 10px; font-size: 1.3rem; }
+        p { line-height: 1.6; margin-bottom: 15px; }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-secondary { background-color: var(--secondary); color: white; }
+        .btn-success { background-color: var(--success); color: white; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Resolution Styles */
+        .step {
+            border-left: 4px solid var(--accent);
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        /* Questionnaire */
+        .quiz-option {
+            display: block;
+            padding: 10px;
+            background: var(--light);
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover { background: #e2e6e7; }
+        .quiz-option.correct { background: #d4edda; border-color: var(--success); }
+        .quiz-option.wrong { background: #f8d7da; border-color: var(--danger); }
+
+        /* Modal */
+        #theory-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 80%;
+            max-width: 900px;
+            max-height: 90vh;
+            border-radius: 8px;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px; right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        .svg-container {
+            text-align: center;
+            margin: 20px 0;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+
+        /* Math Typography */
+        .math { font-family: 'Times New Roman', Times, serif; font-style: italic; }
+        sub, sup { font-size: 0.8em; }
+
+        /* Navigation Buttons at bottom */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+
+        /* Periodic Table Styles */
+        #periodic-table-view {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .periodic-grid {
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            gap: 4px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .element {
+            width: 45px;
+            height: 55px;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: default;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        .element .symbol { font-weight: bold; font-size: 1rem; }
+        .element .at-num { position: absolute; top: 2px; left: 2px; font-size: 0.6rem; }
+        .element .at-mass { position: absolute; bottom: 2px; font-size: 0.55rem; width: 100%; text-align: center; }
+
+        /* Element Colors based on type */
+        .alkali-metal { background-color: #ff9999; }
+        .alkaline-earth { background-color: #ffcc99; }
+        .transition-metal { background-color: #ffff99; }
+        .post-transition { background-color: #ccff99; }
+        .metalloid { background-color: #99ffcc; }
+        .reactive-nonmetal { background-color: #99ffff; }
+        .noble-gas { background-color: #cc99ff; }
+        .lanthanide { background-color: #ff99ff; }
+        .actinide { background-color: #ffb3e6; }
+        .unknown { background-color: #e2e2e2; }
+
+        .pt-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+        }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-box { width: 15px; height: 15px; border: 1px solid #999; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Menú</h2>
+    <div class="colloquium-header" onclick="showPeriodicTable()" style="background: var(--success); color: white; margin-bottom: 15px; justify-content: center;">Tabla Periódica</div>
+    
+    <h2>Contenidos</h2>
+    <div id="colloquium-container">
+        <!-- Populated by JS -->
+    </div>
+</div>
+
+<div id="main-content">
+    <!-- Exercise View -->
+    <div id="exercise-view" class="card">
+        <h1 id="ex-title">Ejercicio 1</h1>
+        <div id="ex-statement"></div>
+        
+        <div class="btn-group">
+            <button class="btn btn-secondary" onclick="toggleResolution()">Ver Resolución</button>
+            <button class="btn btn-primary" onclick="showTheory()">Ver Teoría</button>
+        </div>
+
+        <div id="ex-resolution" style="display: none; margin-top: 30px;">
+            <hr style="margin-bottom: 20px; opacity: 0.2;">
+            <h2>Resolución Paso a Paso</h2>
+            <div id="res-steps"></div>
+        </div>
+    </div>
+
+    <!-- Periodic Table View -->
+    <div id="periodic-table-view" class="card">
+        <h1>Tabla Periódica de los Elementos</h1>
+        <div class="periodic-grid" id="pt-grid">
+            <!-- Populated by JS -->
+        </div>
+        <div class="pt-legend">
+            <div class="legend-item"><div class="legend-box alkali-metal"></div> Metales Alcalinos</div>
+            <div class="legend-item"><div class="legend-box alkaline-earth"></div> Alcalinotérreos</div>
+            <div class="legend-item"><div class="legend-box transition-metal"></div> Metales de Transición</div>
+            <div class="legend-item"><div class="legend-box lanthanide"></div> Lantánidos</div>
+            <div class="legend-item"><div class="legend-box actinide"></div> Actínidos</div>
+            <div class="legend-item"><div class="legend-box post-transition"></div> Otros Metales</div>
+            <div class="legend-item"><div class="legend-box metalloid"></div> Metaloides</div>
+            <div class="legend-item"><div class="legend-box reactive-nonmetal"></div> No Metales</div>
+            <div class="legend-item"><div class="legend-box noble-gas"></div> Gases Nobles</div>
+        </div>
+        <button class="btn btn-secondary" style="margin-top: 20px;" onclick="loadExercise(currentIndex)">Volver al Ejercicio</button>
+    </div>
+
+    <div id="quiz-view" class="card" style="display: none;">
+        <h2>Cuestionario de Conceptos</h2>
+        <div id="quiz-content"></div>
+    </div>
+
+    <div class="nav-controls" id="main-nav-controls">
+        <button id="prev-btn" class="btn btn-secondary" onclick="changeExercise(-1)">Anterior</button>
+        <button id="quiz-btn" class="btn btn-success" onclick="toggleQuiz()">Hacer Cuestionario</button>
+        <button id="next-btn" class="btn btn-secondary" onclick="changeExercise(1)">Siguiente</button>
+    </div>
+</div>
+
+<div id="theory-modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeTheory()">&times;</span>
+        <div id="theory-content"></div>
+    </div>
+</div>
+
+<script>
+    // Scalable data structure for multiple colloquiums
+    const colloquiums = [
+        {
+            id: 2,
+            name: "Coloquio N° 2",
+            exercises: [
+                {
+                    id: 1,
+                    category: "Atoms",
+                    title: "Ejercicio 1",
+                    statement: `Un átomo de hierro presenta número másico <span class="math">A = 56</span> y número atómico <span class="math">Z = 26</span>.
+                    <ul>
+                        <li>Calcule la cantidad de protones (p<sup>+</sup>), neutrones (n<sup>0</sup>) y electrones (e<sup>-</sup>).</li>
+                        <li>Identifique el elemento en la tabla periódica y escriba su símbolo completo <span class="math"><sup>A</sup><sub>Z</sub>X</span>.</li>
+                    </ul>`,
+                    steps: [
+                        { t: "Identificar Datos", d: "Z (Número Atómico) = 26. A (Número Másico) = 56." },
+                        { t: "Calcular Protones", d: "El número atómico Z es igual al número de protones. Por lo tanto, p<sup>+</sup> = 26." },
+                        { t: "Calcular Electrones", d: "En un átomo neutro, el número de electrones es igual al número de protones. Por lo tanto, e<sup>-</sup> = 26." },
+                        { t: "Calcular Neutrones", d: "A = Z + n<sup>0</sup>. Despejando: n<sup>0</sup> = A - Z = 56 - 26 = 30." },
+                        { t: "Símbolo Completo", d: "El elemento con Z = 26 es el Hierro (Fe). El símbolo completo es <sup>56</sup><sub>26</sub>Fe." }
+                    ],
+                    quiz: {
+                        question: "¿Qué representa el número másico (A) en un átomo?",
+                        options: [
+                            { text: "Solo el número de electrones.", correct: false },
+                            { text: "La suma de protones y neutrones.", correct: true },
+                            { text: "El número de niveles de energía.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 2,
+                    category: "Atoms",
+                    title: "Ejercicio 2",
+                    statement: `Un ion posee 20 protones, 18 electrones y 20 neutrones.
+                    <ul>
+                        <li>Escriba el símbolo completo del ion.</li>
+                        <li>Determine su carga e indique si es catión o anión.</li>
+                        <li>¿A qué elemento pertenece?</li>
+                    </ul>`,
+                    steps: [
+                        { t: "Identificar Elemento", d: "Z = número de protones = 20. El elemento con Z = 20 es el Calcio (Ca)." },
+                        { t: "Calcular Carga", d: "Carga = p<sup>+</sup> - e<sup>-</sup> = 20 - 18 = +2." },
+                        { t: "Clasificar Ion", d: "Al tener carga positiva (+2), es un catión (ion dipositivo)." },
+                        { t: "Calcular Número Másico", d: "A = p<sup>+</sup> + n<sup>0</sup> = 20 + 20 = 40." },
+                        { t: "Símbolo del Ion", d: "El símbolo es <sup>40</sup><sub>20</sub>Ca<sup>2+</sup>." }
+                    ],
+                    quiz: {
+                        question: "Si un átomo pierde electrones, se convierte en:",
+                        options: [
+                            { text: "Un anión con carga negativa.", correct: false },
+                            { text: "Un catión con carga positiva.", correct: true },
+                            { text: "Un isótopo neutro.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 3,
+                    category: "Mass",
+                    title: "Ejercicio 3",
+                    statement: `Usando la constante de Avogadro (<span class="math">N<sub>A</sub> = 6,02 × 10<sup>23</sup></span> átomos/mol) y la masa molar del carbono (<span class="math">M = 12 g/mol</span>), calcule la masa de un único átomo de carbono en gramos. Exprese el resultado en notación científica.`,
+                    steps: [
+                        { t: "Relación Fundamental", d: "1 mol de átomos de C tiene una masa de 12 g y contiene 6,02 × 10<sup>23</sup> átomos." },
+                        { t: "Planteo Matemático", d: "Masa de 1 átomo = Masa Molar / N<sub>A</sub>" },
+                        { t: "Cálculo", d: "Masa = 12 g/mol / (6,02 × 10<sup>23</sup> átomos/mol) ≈ 1,99 × 10<sup>-23</sup> g." }
+                    ],
+                    quiz: {
+                        question: "¿Qué cantidad de sustancia contiene exactamente el número de Avogadro de partículas?",
+                        options: [
+                            { text: "1 kilogramo.", correct: false },
+                            { text: "1 mol.", correct: true },
+                            { text: "1 gramo.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 4,
+                    category: "Atoms",
+                    title: "Ejercicio 4",
+                    statement: `Para el isótopo <span class="math"><sup>40</sup><sub>19</sub>K</span>: ¿cuántos neutrones posee? ¿Qué representa cada número en la notación isotópica?`,
+                    steps: [
+                        { t: "Identificar Números", d: "Número superior (A) = 40. Número inferior (Z) = 19." },
+                        { t: "Significado", d: "40 es el número másico (protones + neutrones). 19 es el número atómico (protones)." },
+                        { t: "Calcular Neutrones", d: "n<sup>0</sup> = A - Z = 40 - 19 = 21 neutrones." }
+                    ],
+                    quiz: {
+                        question: "¿Qué tienen en común dos isótopos del mismo elemento?",
+                        options: [
+                            { text: "El mismo número de neutrones.", correct: false },
+                            { text: "El mismo número de masa.", correct: false },
+                            { text: "El mismo número atómico (Z).", correct: true }
+                        ]
+                    }
+                },
+                {
+                    id: 5,
+                    category: "Atoms",
+                    title: "Ejercicio 5",
+                    statement: `Un átomo neutro contiene 15 electrones.
+                    <ul>
+                        <li>¿Cuál es su número atómico Z?</li>
+                        <li>¿Cuántos protones posee?</li>
+                        <li>Identifique el elemento en la tabla periódica.</li>
+                    </ul>`,
+                    steps: [
+                        { t: "Átomo Neutro", d: "En un átomo neutro, e<sup>-</sup> = p<sup>+</sup>." },
+                        { t: "Calcular Z", d: "Si tiene 15 electrones, tiene 15 protones. Por lo tanto, Z = 15." },
+                        { t: "Identificar", d: "El elemento con Z = 15 es el Fósforo (P)." }
+                    ],
+                    quiz: {
+                        question: "Si el fósforo ganara 3 electrones, ¿cuál sería su carga?",
+                        options: [
+                            { text: "+3", correct: false },
+                            { text: "-3", correct: true },
+                            { text: "0", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 6,
+                    category: "Mass",
+                    title: "Ejercicio 6",
+                    statement: `El cloro existe en la naturaleza como mezcla de dos isótopos: <sup>35</sup>Cl (75%) y <sup>37</sup>Cl (25%). Calcule la masa atómica promedio del cloro. ¿Coincide con el valor de la tabla periódica? ¿Por qué se usa un promedio ponderado?`,
+                    steps: [
+                        { t: "Fórmula de Masa Promedio", d: "Masa = (Masa<sub>1</sub> × %<sub>1</sub> + Masa<sub>2</sub> × %<sub>2</sub>) / 100" },
+                        { t: "Cálculo", d: "Masa = (35 × 75 + 37 × 25) / 100 = (2625 + 925) / 100 = 35,5 u." },
+                        { t: "Comparación", d: "Sí, coincide aproximadamente con el valor 35,45 u de la tabla periódica." },
+                        { t: "Justificación", d: "Se usa un promedio ponderado porque los isótopos no abundan en la misma proporción; el resultado debe reflejar la importancia relativa de cada uno." }
+                    ],
+                    quiz: {
+                        question: "¿Por qué la masa atómica del Cl en la tabla no es un número entero?",
+                        options: [
+                            { text: "Por errores de medición antiguos.", correct: false },
+                            { text: "Porque es un promedio de las masas de sus isótopos naturales.", correct: true },
+                            { text: "Porque los electrones tienen masa considerable.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 7,
+                    category: "Mass",
+                    title: "Ejercicio 7",
+                    statement: `Un elemento desconocido tiene dos isótopos: A = 10 (abundancia 20%) y A = 11 (abundancia 80%). Calcule su masa atómica promedio e identifique el elemento.`,
+                    steps: [
+                        { t: "Cálculo de Masa", d: "Masa = (10 × 0,20) + (11 × 0,80) = 2 + 8,8 = 10,8 u." },
+                        { t: "Identificación", d: "El elemento con masa atómica aproximada de 10,8 u es el Boro (B), con Z = 5." }
+                    ],
+                    quiz: {
+                        question: "Si un elemento tiene abundancia del 100% para un solo isótopo, su masa atómica será:",
+                        options: [
+                            { text: "Cero.", correct: false },
+                            { text: "Igual al número másico de ese isótopo.", correct: true },
+                            { text: "La mitad del número atómico.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 8,
+                    category: "Mass",
+                    title: "Ejercicio 8",
+                    statement: `Calcule cuántos átomos hay en 5,0 g de oxígeno molecular (O<sub>2</sub>). Tenga en cuenta que el oxígeno es diatómico. <br>Datos: O = 16 g/mol · N<sub>A</sub> = 6,02 × 10<sup>23</sup> átomos/mol`,
+                    steps: [
+                        { t: "Masa Molar de O<sub>2</sub>", d: "M(O<sub>2</sub>) = 2 × 16 g/mol = 32 g/mol." },
+                        { t: "Calcular Moles", d: "n = masa / M = 5,0 g / 32 g/mol = 0,15625 moles de O<sub>2</sub>." },
+                        { t: "Calcular Moléculas", d: "Moléculas = n × N<sub>A</sub> = 0,15625 × 6,02 × 10<sup>23</sup> ≈ 9,41 × 10<sup>22</sup> moléculas." },
+                        { t: "Calcular Átomos", d: "Cada molécula de O<sub>2</sub> tiene 2 átomos. Átomos totales = 2 × 9,41 × 10<sup>22</sup> ≈ 1,88 × 10<sup>23</sup> átomos." }
+                    ],
+                    quiz: {
+                        question: "¿Cuántos átomos hay en una molécula de Ozono (O<sub>3</sub>)?",
+                        options: [
+                            { text: "2", correct: false },
+                            { text: "3", correct: true },
+                            { text: "6,02 × 10<sup>23</sup>", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 9,
+                    category: "Mass",
+                    title: "Ejercicio 9",
+                    statement: `La masa molar del sodio es 23 g/mol. Calcule la masa de un único átomo de sodio en gramos y exprese el resultado en notación científica.`,
+                    steps: [
+                        { t: "Fórmula", d: "Masa de 1 átomo = M / N<sub>A</sub>" },
+                        { t: "Cálculo", d: "Masa = 23 g/mol / (6,02 × 10<sup>23</sup> átomos/mol) ≈ 3,82 × 10<sup>-23</sup> g." }
+                    ],
+                    quiz: {
+                        question: "¿Qué representa la masa molar?",
+                        options: [
+                            { text: "La masa de un solo átomo.", correct: false },
+                            { text: "La masa de 6,02 × 10<sup>23</sup> partículas.", correct: true },
+                            { text: "El volumen de un gas.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 10,
+                    category: "Atoms",
+                    title: "Ejercicio 10",
+                    statement: `Para el isótopo <span class="math"><sup>63</sup><sub>29</sub>Cu</span>: determine el número de neutrones y explique qué son los isótopos de un elemento.`,
+                    steps: [
+                        { t: "Calcular Neutrones", d: "n<sup>0</sup> = A - Z = 63 - 29 = 34 neutrones." },
+                        { t: "Definición de Isótopos", d: "Son átomos del mismo elemento (mismo Z, mismos protones) que difieren en su número de neutrones (distinto A)." }
+                    ],
+                    quiz: {
+                        question: "¿Cuál de estos pares son isótopos?",
+                        options: [
+                            { text: "<sup>12</sup>C y <sup>14</sup>N", correct: false },
+                            { text: "<sup>35</sup>Cl y <sup>37</sup>Cl", correct: true },
+                            { text: "Na<sup>+</sup> y Mg<sup>2+</sup>", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 11,
+                    category: "Config",
+                    title: "Ejercicio 11",
+                    statement: `Escriba la configuración electrónica completa usando la notación de orbitales (1s² 2s² ...) para:
+                    <ul>
+                        <li>O (Z = 8)</li>
+                        <li>Na (Z = 11)</li>
+                        <li>Ca (Z = 20)</li>
+                    </ul>`,
+                    steps: [
+                        { t: "Oxígeno (Z=8)", d: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>4</sup>" },
+                        { t: "Sodio (Z=11)", d: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>1</sup>" },
+                        { t: "Calcio (Z=20)", d: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>6</sup> 4s<sup>2</sup>" }
+                    ],
+                    quiz: {
+                        question: "¿Cuál es la capacidad máxima de electrones en un subnivel 'p'?",
+                        options: [
+                            { text: "2", correct: false },
+                            { text: "6", correct: true },
+                            { text: "10", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 12,
+                    category: "Config",
+                    title: "Ejercicio 12",
+                    statement: `Escriba la configuración electrónica del nitrógeno (Z = 7). Aplicando la regla de Hund, determine cuántos electrones desapareados posee y en qué subnivel se encuentran.`,
+                    steps: [
+                        { t: "Configuración", d: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>3</sup>" },
+                        { t: "Regla de Hund", d: "En el subnivel 2p hay 3 orbitales. Los 3 electrones entran de a uno en cada orbital con el mismo espín." },
+                        { t: "Resultado", d: "Posee 3 electrones desapareados en el subnivel 2p." }
+                    ],
+                    quiz: {
+                        question: "¿Qué establece la regla de Hund?",
+                        options: [
+                            { text: "Que los electrones deben estar siempre apareados.", correct: false },
+                            { text: "Que los orbitales de igual energía se ocupan con un electrón antes de aparearse.", correct: true },
+                            { text: "Que no puede haber dos electrones con los mismos números cuánticos.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 13,
+                    category: "Config",
+                    title: "Ejercicio 13",
+                    statement: `Escriba la configuración electrónica de los siguientes iones y compárela con el átomo neutro correspondiente:
+                    <ul>
+                        <li>Na<sup>+</sup> (pierde 1 electrón)</li>
+                        <li>Cl<sup>-</sup> (gana 1 electrón)</li>
+                    </ul>`,
+                    steps: [
+                        { t: "Na (Z=11) vs Na<sup>+</sup>", d: "Na: [Ne] 3s<sup>1</sup>. Na<sup>+</sup>: [Ne] o 1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup>. (Isoelectrónico con Neón)." },
+                        { t: "Cl (Z=17) vs Cl<sup>-</sup>", d: "Cl: [Ne] 3s<sup>2</sup> 3p<sup>5</sup>. Cl<sup>-</sup>: [Ne] 3s<sup>2</sup> 3p<sup>6</sup> o [Ar]. (Isoelectrónico con Argón)." }
+                    ],
+                    quiz: {
+                        question: "¿A qué gas noble es isoelectrónico el ion Al<sup>3+</sup> (Z=13)?",
+                        options: [
+                            { text: "Helio", correct: false },
+                            { text: "Neón", correct: true },
+                            { text: "Argón", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 14,
+                    category: "Trends",
+                    title: "Ejercicio 14",
+                    statement: `Un elemento presenta la configuración 1s² 2s² 2p⁶ 3s². Indique: grupo, período y tipo de elemento (metal, no metal o metaloide) según la tabla periódica.`,
+                    steps: [
+                        { t: "Período", d: "El nivel de energía más alto es n = 3. Período 3." },
+                        { t: "Grupo", d: "Termina en s<sup>2</sup>. Grupo 2A (o Grupo 2)." },
+                        { t: "Identificación", d: "El elemento es el Magnesio (Mg)." },
+                        { t: "Tipo", d: "Es un metal (alcalinotérreo)." }
+                    ],
+                    quiz: {
+                        question: "Los elementos del grupo 2A se conocen como:",
+                        options: [
+                            { text: "Metales Alcalinos.", correct: false },
+                            { text: "Metales Alcalinotérreos.", correct: true },
+                            { text: "Halógenos.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 15,
+                    category: "Config",
+                    title: "Ejercicio 15",
+                    statement: `Escriba la configuración electrónica del Cl (Z = 17). ¿Cuántos electrones hay en el subnivel 3p? ¿Cuántos electrones de valencia tiene?`,
+                    steps: [
+                        { t: "Configuración", d: "1s<sup>2</sup> 2s<sup>2</sup> 2p<sup>6</sup> 3s<sup>2</sup> 3p<sup>5</sup>" },
+                        { t: "Subnivel 3p", d: "Hay 5 electrones." },
+                        { t: "Electrones de Valencia", d: "Son los del nivel más alto (n=3): 3s<sup>2</sup> + 3p<sup>5</sup> = 7 electrones de valencia." }
+                    ],
+                    quiz: {
+                        question: "¿En qué grupo se encuentra un elemento con 7 electrones de valencia?",
+                        options: [
+                            { text: "Grupo 1A", correct: false },
+                            { text: "Grupo 7A (Halógenos)", correct: true },
+                            { text: "Gases Nobles", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 16,
+                    category: "Trends",
+                    title: "Ejercicio 16",
+                    statement: `Ordene de menor a mayor radio atómico: Li, Na, K. Justifique usando las tendencias periódicas (variación en grupo y en período).`,
+                    steps: [
+                        { t: "Tendencia en Grupo", d: "Al bajar en un grupo, el radio atómico aumenta debido al agregado de nuevos niveles de energía (capas)." },
+                        { t: "Posición", d: "Li (p2), Na (p3), K (p4). Todos están en el grupo 1A." },
+                        { t: "Orden", d: "Li < Na < K." }
+                    ],
+                    quiz: {
+                        question: "¿Cómo varía el radio atómico de izquierda a derecha en un período?",
+                        options: [
+                            { text: "Aumenta.", correct: false },
+                            { text: "Disminuye.", correct: true },
+                            { text: "Permanece igual.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 17,
+                    category: "Trends",
+                    title: "Ejercicio 17",
+                    statement: `Compare la electronegatividad de O y F. ¿Cuál es mayor y por qué? ¿Qué escala se utiliza habitualmente para medir esta propiedad?`,
+                    steps: [
+                        { t: "Tendencia", d: "La electronegatividad aumenta de izquierda a derecha en un período y de abajo hacia arriba en un grupo." },
+                        { t: "Comparación", d: "El Flúor (F) está a la derecha del Oxígeno (O). Por lo tanto, la electronegatividad del F es mayor." },
+                        { t: "Dato", d: "El F es el elemento más electronegativo de la tabla (valor 4,0)." },
+                        { t: "Escala", d: "Se utiliza habitualmente la escala de Pauling." }
+                    ],
+                    quiz: {
+                        question: "¿Qué elemento tiene la electronegatividad más baja?",
+                        options: [
+                            { text: "Flúor", correct: false },
+                            { text: "Francio", correct: true },
+                            { text: "Oxígeno", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 18,
+                    category: "Trends",
+                    title: "Ejercicio 18",
+                    statement: `Indique cuál tiene mayor primera energía de ionización: Mg o Cl. Explique la tendencia periódica y los factores que influyen en esta propiedad.`,
+                    steps: [
+                        { t: "Tendencia", d: "Aumenta hacia la derecha en un período." },
+                        { t: "Comparación", d: "Mg y Cl están en el mismo período (3). El Cl está mucho más a la derecha." },
+                        { t: "Resultado", d: "El Cl tiene mayor energía de ionización." },
+                        { t: "Factores", d: "Influye la carga nuclear efectiva (mayor en Cl, atrae más fuerte a los electrones) y el radio (Cl es más pequeño)." }
+                    ],
+                    quiz: {
+                        question: "¿Qué es la energía de ionización?",
+                        options: [
+                            { text: "Energía para atraer electrones.", correct: false },
+                            { text: "Energía mínima para quitar un electrón de un átomo gaseoso.", correct: true },
+                            { text: "Energía liberada al formar un enlace.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 19,
+                    category: "Trends",
+                    title: "Ejercicio 19",
+                    statement: `Ordene de mayor a menor carácter metálico: Na, Al, Si. Justifique con base en la posición en la tabla periódica.`,
+                    steps: [
+                        { t: "Tendencia", d: "El carácter metálico aumenta hacia la izquierda y hacia abajo." },
+                        { t: "Posición", d: "En el período 3: Na (G1), Al (G13), Si (G14)." },
+                        { t: "Orden", d: "Na > Al > Si." }
+                    ],
+                    quiz: {
+                        question: "¿Dónde se encuentran los elementos con mayor carácter metálico?",
+                        options: [
+                            { text: "Arriba a la derecha.", correct: false },
+                            { text: "Abajo a la izquierda.", correct: true },
+                            { text: "En el centro.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 20,
+                    category: "Trends",
+                    title: "Ejercicio 20",
+                    statement: `Compare el radio atómico del Cl con el del ion Cl<sup>-</sup>. ¿Cuál es mayor? Explique por qué la ganancia de electrones modifica el tamaño atómico.`,
+                    steps: [
+                        { t: "Comparación", d: "El ion Cl<sup>-</sup> es mayor que el átomo de Cl." },
+                        { t: "Explicación", d: "Al ganar un electrón, aumenta la repulsión entre electrones en la nube, haciendo que esta se expanda mientras la carga nuclear (protones) se mantiene igual." }
+                    ],
+                    quiz: {
+                        question: "En general, un anión es ________ que su átomo neutro.",
+                        options: [
+                            { text: "Más pequeño.", correct: false },
+                            { text: "Más grande.", correct: true },
+                            { text: "Del mismo tamaño.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 21,
+                    category: "Bonds",
+                    title: "Ejercicio 21",
+                    statement: `Clasifique el tipo de enlace presente en cada compuesto e indique el criterio de clasificación utilizado:
+                    <ul>
+                        <li>KBr</li>
+                        <li>H<sub>2</sub>O</li>
+                        <li>Cu metálico</li>
+                    </ul>`,
+                    steps: [
+                        { t: "KBr", d: "Enlace Iónico. (Metal K + No Metal Br, gran diferencia de electronegatividad)." },
+                        { t: "H<sub>2</sub>O", d: "Enlace Covalente Polar. (Dos No Metales, diferencia de electronegatividad moderada)." },
+                        { t: "Cu metálico", d: "Enlace Metálico. (Átomos del mismo metal compartiendo 'mar de electrones')." }
+                    ],
+                    quiz: {
+                        question: "Un enlace entre dos no metales suele ser:",
+                        options: [
+                            { text: "Iónico.", correct: false },
+                            { text: "Covalente.", correct: true },
+                            { text: "Metálico.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 22,
+                    category: "Bonds",
+                    title: "Ejercicio 22",
+                    statement: `Dibuje la estructura de Lewis del CO<sub>2</sub>. Indique los pares enlazantes y no enlazantes, y el tipo de enlaces (simple, doble o triple). ¿Cuántos electrones totales de valencia deben representarse?`,
+                    steps: [
+                        { t: "Contar Electrones", d: "C (4) + 2 × O (6) = 16 electrones de valencia totales." },
+                        { t: "Estructura", d: "O = C = O (con dos pares libres en cada Oxígeno)." },
+                        { t: "Tipos de Enlace", d: "Dos enlaces dobles." },
+                        { t: "Pares", d: "4 pares enlazantes (8e-) y 4 pares no enlazantes (8e-)." }
+                    ],
+                    quiz: {
+                        question: "¿Cuántos electrones se comparten en un enlace doble?",
+                        options: [
+                            { text: "2", correct: false },
+                            { text: "4", correct: true },
+                            { text: "6", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 23,
+                    category: "Geometry",
+                    title: "Ejercicio 23",
+                    statement: `Dibuje la estructura de Lewis del NH<sub>3</sub>. Indique los pares enlazantes y no enlazantes, y la geometría molecular resultante. ¿Cuántos electrones totales de valencia intervienen?`,
+                    steps: [
+                        { t: "Contar Electrones", d: "N (5) + 3 × H (1) = 8 electrones." },
+                        { t: "Estructura", d: "N en el centro, unido a 3 H mediante enlaces simples, y un par libre sobre el N." },
+                        { t: "Geometría", d: "Piramidal Trigonal (debido al par libre que empuja los enlaces)." }
+                    ],
+                    quiz: {
+                        question: "¿Cuál es la geometría de una molécula con 4 pares de electrones alrededor del átomo central (todos enlazantes)?",
+                        options: [
+                            { text: "Lineal", correct: false },
+                            { text: "Tetraédrica", correct: true },
+                            { text: "Plana trigonal", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 24,
+                    category: "Geometry",
+                    title: "Ejercicio 24",
+                    statement: `Indique si las siguientes moléculas son polares o no polares. Justifique considerando tanto la polaridad de cada enlace como la geometría molecular:
+                    <ul>
+                        <li>CO<sub>2</sub> (geometría lineal)</li>
+                        <li>NH<sub>3</sub> (geometría piramidal)</li>
+                        <li>CH<sub>4</sub> (geometría tetraédrica)</li>
+                    </ul>`,
+                    steps: [
+                        { t: "CO<sub>2</sub>", d: "No Polar. Los enlaces C-O son polares, pero al ser lineal y simétrica, los momentos dipolares se cancelan." },
+                        { t: "NH<sub>3</sub>", d: "Polar. Geometría asimétrica (piramidal) debido al par libre; los dipolos no se cancelan." },
+                        { t: "CH<sub>4</sub>", d: "No Polar. Aunque los enlaces C-H tienen pequeña polaridad, la geometría tetraédrica es perfectamente simétrica y se cancelan." }
+                    ],
+                    quiz: {
+                        question: "¿Puede una molécula con enlaces polares ser no polar?",
+                        options: [
+                            { text: "No, nunca.", correct: false },
+                            { text: "Sí, si su geometría es simétrica.", correct: true },
+                            { text: "Solo si es un gas noble.", correct: false }
+                        ]
+                    }
+                },
+                {
+                    id: 25,
+                    category: "Bonds",
+                    title: "Ejercicio 25",
+                    statement: `La electronegatividad del H es 2,1 y la del Cl es 3,0. Calcule la diferencia de electronegatividad del enlace H–Cl y clasifíquelo según los criterios: ΔEN < 0,5 → covalente no polar; 0,5–1,7 → covalente polar; > 1,7 → iónico.`,
+                    steps: [
+                        { t: "Cálculo", d: "ΔEN = 3,0 - 2,1 = 0,9." },
+                        { t: "Clasificación", d: "Como 0,9 está entre 0,5 y 1,7, el enlace es Covalente Polar." }
+                    ],
+                    quiz: {
+                        question: "Si la ΔEN es 0, el enlace es:",
+                        options: [
+                            { text: "Iónico.", correct: false },
+                            { text: "Covalente no polar (puro).", correct: true },
+                            { text: "Metálico.", correct: false }
+                        ]
+                    }
+                }
+            ]
+        }
+    ];
+
+    const theoryData = {
+        "Atoms": {
+            title: "Estructura Atómica y Partículas Subatómicas",
+            content: `
+            <h3>El Átomo</h3>
+            <p>Unidad básica de un elemento que puede intervenir en una combinación química. Está formado por partículas subatómicas:</p>
+            <ul>
+                <li><b>Protones (p<sup>+</sup>):</b> Partículas con carga positiva localizadas en el núcleo. El número de protones es el <b>Número Atómico (Z)</b>.</li>
+                <li><b>Electrones (e<sup>-</sup>):</b> Partículas con carga negativa que rodean al núcleo. En un átomo neutro, p<sup>+</sup> = e<sup>-</sup>.</li>
+                <li><b>Neutrones (n<sup>0</sup>):</b> Partículas sin carga en el núcleo. Contribuyen a la estabilidad nuclear.</li>
+            </ul>
+            <h3>Número Másico (A)</h3>
+            <p>Es la suma total de protones y neutrones en el núcleo. <span class="math">A = Z + n<sup>0</sup></span>.</p>
+            <h3>Iones</h3>
+            <p>Cuando un átomo neutro gana o pierde electrones, adquiere una carga neta y se llama <b>ion</b>.</p>
+            <ul>
+                <li><b>Catión:</b> Ion con carga positiva (+). Se forma por la <b>pérdida</b> de uno o más electrones.</li>
+                <li><b>Anión:</b> Ion con carga negativa (-). Se forma por la <b>ganancia</b> de uno o más electrones.</li>
+            </ul>
+            <h3>Isótopos</h3>
+            <p>Átomos que tienen el mismo número atómico (Z) pero diferente número de masa (A). Esto significa que tienen el mismo número de protones pero <b>diferente número de neutrones</b>.</p>
+            `,
+            svg: `<svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="80" fill="rgba(52, 152, 219, 0.1)" stroke="#3498db" stroke-dasharray="5,5" />
+                <circle cx="100" cy="100" r="20" fill="#e74c3c" />
+                <text x="100" y="105" font-size="10" text-anchor="middle" fill="white">Núcleo</text>
+                <circle cx="60" cy="60" r="6" fill="#2c3e50" />
+                <text x="60" y="55" font-size="10" text-anchor="middle">e-</text>
+                <text x="100" y="195" font-size="12" text-anchor="middle">Átomo de Bohr</text>
+            </svg>`
+        },
+        "Mass": {
+            title: "Concepto de Mol y Masa Atómica",
+            content: `
+            <h3>El Mol</h3>
+            <p>Unidad del SI para la cantidad de sustancia. Contiene tantas unidades elementales (átomos, moléculas) como átomos hay en 12 g de C-12.</p>
+            <h3>Constante de Avogadro (N<sub>A</sub>)</h3>
+            <p>Es el número de partículas en un mol: <span class="math">6,022 × 10<sup>23</sup></span> partículas/mol.</p>
+            <h3>Masa Molar (M)</h3>
+            <p>Es la masa (en gramos) de un mol de unidades de una sustancia. Se expresa en <b>g/mol</b>. Es numéricamente igual a la masa atómica en uma.</p>
+            <h3>Masa Atómica Promedio</h3>
+            <p>Es el promedio de las masas de los isótopos naturales de un elemento, ponderado según su abundancia relativa en la naturaleza.</p>
+            <h3>Moléculas Diatómicas</h3>
+            <p>Elementos que en la naturaleza se encuentran unidos de a dos átomos (ej. O<sub>2</sub>, H<sub>2</sub>, Cl<sub>2</sub>). Al calcular masas moleculares, debe multiplicarse la masa atómica por dos.</p>
+            `,
+            svg: `<svg width="200" height="120" viewBox="0 0 200 120">
+                <rect x="20" y="20" width="160" height="80" rx="10" fill="#ecf0f1" stroke="#2c3e50" />
+                <text x="100" y="50" font-size="14" text-anchor="middle" font-weight="bold">1 mol</text>
+                <text x="100" y="75" font-size="12" text-anchor="middle">= 6.022 × 10²³ part.</text>
+                <text x="100" y="95" font-size="12" text-anchor="middle">= Masa Molar (g)</text>
+            </svg>`
+        },
+        "Config": {
+            title: "Configuración Electrónica",
+            content: `
+            <h3>Niveles y Subniveles</h3>
+            <p>Los electrones se distribuyen en niveles de energía (n=1, 2, 3...) y subniveles (s, p, d, f).</p>
+            <ul>
+                <li><b>Capacidades:</b> s: 2e<sup>-</sup>, p: 6e<sup>-</sup>, d: 10e<sup>-</sup>, f: 14e<sup>-</sup>.</li>
+            </ul>
+            <h3>Principios de Ordenamiento</h3>
+            <ul>
+                <li><b>Principio de Aufbau:</b> Los electrones llenan primero los orbitales de menor energía.</li>
+                <li><b>Principio de Exclusión de Pauli:</b> No puede haber dos electrones con los mismos números cuánticos (espines opuestos).</li>
+                <li><b>Regla de Hund:</b> En subniveles con múltiples orbitales (como p), los electrones se distribuyen con espines paralelos antes de aparearse.</li>
+            </ul>
+            <h3>Electrones de Valencia</h3>
+            <p>Son los electrones que se encuentran en el nivel de energía más alto. Determinan el comportamiento químico del elemento.</p>
+            <h3>Especies Isoelectrónicas</h3>
+            <p>Átomos o iones que tienen el mismo número de electrones y, por tanto, la misma configuración electrónica (ej. Na<sup>+</sup> y Ne).</p>
+            `,
+            svg: `<svg width="220" height="160" viewBox="0 0 220 160">
+                <line x1="20" y1="140" x2="20" y2="20" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="5" y="80" font-size="10" transform="rotate(-90 5,80)">Energía aumenta</text>
+                <text x="40" y="140">1s</text><rect x="60" y="130" width="20" height="20" fill="none" stroke="#333" />
+                <text x="40" y="110">2s</text><rect x="60" y="100" width="20" height="20" fill="none" stroke="#333" />
+                <text x="40" y="80">2p</text>
+                <rect x="60" y="70" width="20" height="20" fill="none" stroke="#333" />
+                <rect x="82" y="70" width="20" height="20" fill="none" stroke="#333" />
+                <rect x="104" y="70" width="20" height="20" fill="none" stroke="#333" />
+            </svg>`
+        },
+        "Trends": {
+            title: "Propiedades Periódicas",
+            content: `
+            <h3>Radio Atómico</h3>
+            <p>Distancia entre el núcleo y el electrón más externo. <b>Aumenta hacia abajo</b> (más niveles) y <b>hacia la izquierda</b> (menor carga nuclear efectiva).</p>
+            <h3>Radio Iónico</h3>
+            <p>Tamaño de un ion. Los cationes son más pequeños que sus átomos neutros. Los aniones son más grandes debido a la repulsión electrónica.</p>
+            <h3>Energía de Ionización</h3>
+            <p>Energía mínima necesaria para remover un electrón de un átomo gaseoso. <b>Aumenta hacia arriba y hacia la derecha</b>.</p>
+            <h3>Electronegatividad</h3>
+            <p>Capacidad de un átomo para atraer electrones en un enlace químico. Escala de Pauling (máximo F=4,0, mínimo Fr=0,7).</p>
+            <h3>Carácter Metálico</h3>
+            <p>Tendencia a perder electrones. Aumenta hacia la izquierda y hacia abajo en la tabla.</p>
+            `,
+            svg: `<svg width="250" height="150" viewBox="0 0 250 150">
+                <rect x="50" y="30" width="150" height="80" fill="#f9f9f9" stroke="#333" />
+                <line x1="30" y1="120" x2="220" y2="120" stroke="blue" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="125" y="135" font-size="10" text-anchor="middle" fill="blue">Radio Atómico aumenta</text>
+                <line x1="220" y1="110" x2="220" y2="20" stroke="red" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="235" y="65" font-size="10" transform="rotate(-90 235,65)" fill="red">Electronegatividad aumenta</text>
+            </svg>`
+        },
+        "Bonds": {
+            title: "Enlaces Químicos y Estructura de Lewis",
+            content: `
+            <h3>Tipos de Enlace</h3>
+            <ul>
+                <li><b>Iónico:</b> Transferencia de electrones. Generalmente entre un metal (baja EN) y un no metal (alta EN). ΔEN > 1,7.</li>
+                <li><b>Covalente:</b> Compartición de electrones entre no metales.
+                    <ul>
+                        <li><b>Polar:</b> Compartición desigual (0,5 < ΔEN < 1,7).</li>
+                        <li><b>No Polar:</b> Compartición igual (ΔEN < 0,5).</li>
+                    </ul>
+                </li>
+                <li><b>Metálico:</b> Átomos metálicos rodeados por un "mar" de electrones libres.</li>
+            </ul>
+            <h3>Estructura de Lewis</h3>
+            <p>Representación de los electrones de valencia como puntos. Los átomos tienden a rodearse de 8 electrones para alcanzar estabilidad (<b>Regla del Octeto</b>), excepto el Hidrógeno que busca 2 (Dueto).</p>
+            <h3>Pares de Electrones</h3>
+            <ul>
+                <li><b>Enlazantes:</b> Los que forman el enlace químico.</li>
+                <li><b>No enlazantes (libres):</b> Pares de electrones externos que no participan en el enlace.</li>
+            </ul>
+            `,
+            svg: `<svg width="200" height="100" viewBox="0 0 200 100">
+                <circle cx="70" cy="50" r="25" fill="none" stroke="#3498db" />
+                <circle cx="130" cy="50" r="25" fill="none" stroke="#3498db" />
+                <circle cx="95" cy="50" r="4" fill="#f39c12" />
+                <circle cx="105" cy="50" r="4" fill="#f39c12" />
+                <text x="100" y="90" font-size="12" text-anchor="middle">Enlace Covalente (H:H)</text>
+            </svg>`
+        },
+        "Geometry": {
+            title: "Geometría Molecular y Polaridad",
+            content: `
+            <h3>Teoría RPECV (VSEPR)</h3>
+            <p>Establece que los pares de electrones alrededor de un átomo central se repelen entre sí, adoptando una forma que minimice esa repulsión.</p>
+            <ul>
+                <li><b>Lineal:</b> 2 nubes de electrones (180°).</li>
+                <li><b>Plana Trigonal:</b> 3 nubes (120°).</li>
+                <li><b>Tetraédrica:</b> 4 nubes (109.5°).</li>
+                <li><b>Piramidal:</b> 4 nubes (3 enlaces + 1 par libre).</li>
+            </ul>
+            <h3>Polaridad Molecular</h3>
+            <p>Depende de la polaridad de los enlaces <b>y de la geometría</b>. Una molécula es <b>no polar</b> si es simétrica y los momentos dipolares se anulan (ej. CO<sub>2</sub>, CH<sub>4</sub>), y <b>polar</b> si es asimétrica (ej. NH<sub>3</sub>, H<sub>2</sub>O).</p>
+            `,
+            svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                <circle cx="100" cy="75" r="10" fill="#2c3e50" />
+                <line x1="100" y1="75" x2="60" y2="40" stroke="#333" />
+                <line x1="100" y1="75" x2="140" y2="40" stroke="#333" />
+                <line x1="100" y1="75" x2="100" y2="120" stroke="#333" />
+                <circle cx="60" cy="40" r="8" fill="#3498db" />
+                <circle cx="140" cy="40" r="8" fill="#3498db" />
+                <circle cx="100" cy="120" r="8" fill="#3498db" />
+                <text x="100" y="145" font-size="12" text-anchor="middle">Forma Trigonal</text>
+            </svg>`
+        }
+    };
+
+    let currentColloquiumIndex = 0;
+    let currentExerciseIndex = 0;
+
+    function init() {
+        renderSidebar();
+        loadExercise(0, 0);
+    }
+
+    function renderSidebar() {
+        const container = document.getElementById('colloquium-container');
+        container.innerHTML = '';
+        
+        colloquiums.forEach((col, cIdx) => {
+            const group = document.createElement('div');
+            group.className = 'colloquium-group';
+            
+            const header = document.createElement('div');
+            header.className = 'colloquium-header';
+            header.innerHTML = `<span>${col.name}</span> <span id="arrow-${cIdx}">▼</span>`;
+            header.onclick = () => toggleColloquium(cIdx);
+            
+            const list = document.createElement('ul');
+            list.className = 'exercise-list';
+            list.id = `list-${cIdx}`;
+            if (cIdx === currentColloquiumIndex) list.classList.add('expanded');
+            
+            col.exercises.forEach((ex, eIdx) => {
+                const li = document.createElement('li');
+                li.className = 'exercise-item';
+                li.id = `item-${cIdx}-${eIdx}`;
+                li.textContent = ex.title;
+                li.onclick = (e) => {
+                    e.stopPropagation();
+                    loadExercise(cIdx, eIdx);
+                };
+                list.appendChild(li);
+            });
+            
+            group.appendChild(header);
+            group.appendChild(list);
+            container.appendChild(group);
+        });
+    }
+
+    function toggleColloquium(index) {
+        const list = document.getElementById(`list-${index}`);
+        const arrow = document.getElementById(`arrow-${index}`);
+        const isExpanded = list.classList.contains('expanded');
+        
+        // Close others if you want only one open at a time (optional)
+        // document.querySelectorAll('.exercise-list').forEach(l => l.classList.remove('expanded'));
+        
+        if (isExpanded) {
+            list.classList.remove('expanded');
+            arrow.textContent = '▼';
+        } else {
+            list.classList.add('expanded');
+            arrow.textContent = '▲';
+        }
+    }
+
+    function loadExercise(cIdx, eIdx) {
+        currentColloquiumIndex = cIdx;
+        currentExerciseIndex = eIdx;
+        
+        document.getElementById('periodic-table-view').style.display = 'none';
+        document.getElementById('main-nav-controls').style.display = 'flex';
+        document.getElementById('exercise-view').style.display = 'block';
+
+        const col = colloquiums[cIdx];
+        const ex = col.exercises[eIdx];
+        
+        // Update Sidebar Active state
+        document.querySelectorAll('.exercise-item').forEach(item => item.classList.remove('active'));
+        document.getElementById(`item-${cIdx}-${eIdx}`).classList.add('active');
+
+        // Load Content
+        document.getElementById('ex-title').textContent = `${col.name} - ${ex.title}`;
+        document.getElementById('ex-statement').innerHTML = ex.statement;
+        
+        // Load Resolution
+        const stepsContainer = document.getElementById('res-steps');
+        stepsContainer.innerHTML = '';
+        ex.steps.forEach(step => {
+            const div = document.createElement('div');
+            div.className = 'step';
+            div.innerHTML = `<div class="step-title">${step.t}</div><p>${step.d}</p>`;
+            stepsContainer.appendChild(div);
+        });
+
+        // UI Reset
+        document.getElementById('ex-resolution').style.display = 'none';
+        document.getElementById('quiz-view').style.display = 'none';
+        document.getElementById('prev-btn').disabled = (cIdx === 0 && eIdx === 0);
+        document.getElementById('next-btn').disabled = (cIdx === colloquiums.length - 1 && eIdx === col.exercises.length - 1);
+        document.getElementById('quiz-btn').textContent = "Hacer Cuestionario";
+        document.getElementById('main-content').scrollTop = 0;
+    }
+
+    function changeExercise(delta) {
+        let newEIdx = currentExerciseIndex + delta;
+        let newCIdx = currentColloquiumIndex;
+
+        if (newEIdx < 0) {
+            if (newCIdx > 0) {
+                newCIdx--;
+                newEIdx = colloquiums[newCIdx].exercises.length - 1;
+            } else {
+                return; // Boundary
+            }
+        } else if (newEIdx >= colloquiums[newCIdx].exercises.length) {
+            if (newCIdx < colloquiums.length - 1) {
+                newCIdx++;
+                newEIdx = 0;
+            } else {
+                return; // Boundary
+            }
+        }
+        loadExercise(newCIdx, newEIdx);
+    }
+
+    function toggleResolution() {
+        const res = document.getElementById('ex-resolution');
+        res.style.display = res.style.display === 'none' ? 'block' : 'none';
+        if (res.style.display === 'block') res.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleQuiz() {
+        const qv = document.getElementById('quiz-view');
+        if (qv.style.display === 'none') {
+            const ex = colloquiums[currentColloquiumIndex].exercises[currentExerciseIndex];
+            const content = document.getElementById('quiz-content');
+            content.innerHTML = `
+                <p><strong>${ex.quiz.question}</strong></p>
+                ${ex.quiz.options.map(opt => `
+                    <div class="quiz-option" onclick="checkAnswer(this, ${opt.correct})">${opt.text}</div>
+                `).join('')}
+            `;
+            qv.style.display = 'block';
+            document.getElementById('quiz-btn').textContent = "Ocultar Cuestionario";
+            qv.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            qv.style.display = 'none';
+            document.getElementById('quiz-btn').textContent = "Hacer Cuestionario";
+        }
+    }
+
+    function checkAnswer(el, isCorrect) {
+        if (el.parentNode.querySelector('.correct') || el.parentNode.querySelector('.wrong')) return;
+        el.className = 'quiz-option ' + (isCorrect ? 'correct' : 'wrong');
+    }
+
+    function showTheory() {
+        const ex = colloquiums[currentColloquiumIndex].exercises[currentExerciseIndex];
+        const theory = theoryData[ex.category];
+        const content = document.getElementById('theory-content');
+        content.innerHTML = `
+            <h1>${theory.title}</h1>
+            <div style="font-size: 1.1rem;">${theory.content}</div>
+            <div class="svg-container">${theory.svg}</div>
+            <button class="btn btn-primary" onclick="closeTheory()">Entendido</button>
+        `;
+        document.getElementById('theory-modal').style.display = 'flex';
+    }
+
+    function closeTheory() {
+        document.getElementById('theory-modal').style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('theory-modal');
+        if (event.target == modal) closeTheory();
+    }
+
+
+    const elements = [
+        { number: 1, symbol: 'H', mass: '1.008', col: 1, row: 1, type: 'reactive-nonmetal' },
+        { number: 2, symbol: 'He', mass: '4.003', col: 18, row: 1, type: 'noble-gas' },
+        { number: 3, symbol: 'Li', mass: '6.94', col: 1, row: 2, type: 'alkali-metal' },
+        { number: 4, symbol: 'Be', mass: '9.012', col: 2, row: 2, type: 'alkaline-earth' },
+        { number: 5, symbol: 'B', mass: '10.81', col: 13, row: 2, type: 'metalloid' },
+        { number: 6, symbol: 'C', mass: '12.01', col: 14, row: 2, type: 'reactive-nonmetal' },
+        { number: 7, symbol: 'N', mass: '14.01', col: 15, row: 2, type: 'reactive-nonmetal' },
+        { number: 8, symbol: 'O', mass: '16.00', col: 16, row: 2, type: 'reactive-nonmetal' },
+        { number: 9, symbol: 'F', mass: '19.00', col: 17, row: 2, type: 'reactive-nonmetal' },
+        { number: 10, symbol: 'Ne', mass: '20.18', col: 18, row: 2, type: 'noble-gas' },
+
+        { number: 11, symbol: 'Na', mass: '22.99', col: 1, row: 3, type: 'alkali-metal' },
+        { number: 12, symbol: 'Mg', mass: '24.31', col: 2, row: 3, type: 'alkaline-earth' },
+        { number: 13, symbol: 'Al', mass: '26.98', col: 13, row: 3, type: 'post-transition' },
+        { number: 14, symbol: 'Si', mass: '28.09', col: 14, row: 3, type: 'metalloid' },
+        { number: 15, symbol: 'P', mass: '30.97', col: 15, row: 3, type: 'reactive-nonmetal' },
+        { number: 16, symbol: 'S', mass: '32.06', col: 16, row: 3, type: 'reactive-nonmetal' },
+        { number: 17, symbol: 'Cl', mass: '35.45', col: 17, row: 3, type: 'reactive-nonmetal' },
+        { number: 18, symbol: 'Ar', mass: '39.95', col: 18, row: 3, type: 'noble-gas' },
+
+        { number: 19, symbol: 'K', mass: '39.10', col: 1, row: 4, type: 'alkali-metal' },
+        { number: 20, symbol: 'Ca', mass: '40.08', col: 2, row: 4, type: 'alkaline-earth' },
+        { number: 21, symbol: 'Sc', mass: '44.96', col: 3, row: 4, type: 'transition-metal' },
+        { number: 22, symbol: 'Ti', mass: '47.87', col: 4, row: 4, type: 'transition-metal' },
+        { number: 23, symbol: 'V', mass: '50.94', col: 5, row: 4, type: 'transition-metal' },
+        { number: 24, symbol: 'Cr', mass: '52.00', col: 6, row: 4, type: 'transition-metal' },
+        { number: 25, symbol: 'Mn', mass: '54.94', col: 7, row: 4, type: 'transition-metal' },
+        { number: 26, symbol: 'Fe', mass: '55.85', col: 8, row: 4, type: 'transition-metal' },
+        { number: 27, symbol: 'Co', mass: '58.93', col: 9, row: 4, type: 'transition-metal' },
+        { number: 28, symbol: 'Ni', mass: '58.69', col: 10, row: 4, type: 'transition-metal' },
+        { number: 29, symbol: 'Cu', mass: '63.55', col: 11, row: 4, type: 'transition-metal' },
+        { number: 30, symbol: 'Zn', mass: '65.38', col: 12, row: 4, type: 'transition-metal' },
+        { number: 31, symbol: 'Ga', mass: '69.72', col: 13, row: 4, type: 'post-transition' },
+        { number: 32, symbol: 'Ge', mass: '72.63', col: 14, row: 4, type: 'metalloid' },
+        { number: 33, symbol: 'As', mass: '74.92', col: 15, row: 4, type: 'metalloid' },
+        { number: 34, symbol: 'Se', mass: '78.97', col: 16, row: 4, type: 'reactive-nonmetal' },
+        { number: 35, symbol: 'Br', mass: '79.90', col: 17, row: 4, type: 'reactive-nonmetal' },
+        { number: 36, symbol: 'Kr', mass: '83.80', col: 18, row: 4, type: 'noble-gas' }
+    ];
+
+
+    function renderPeriodicTable() {
+        const grid = document.getElementById('pt-grid');
+        grid.innerHTML = '';
+        elements.forEach(el => {
+            const div = document.createElement('div');
+            div.className = `element ${el.type}`;
+            div.style.gridColumn = el.col;
+            div.style.gridRow = el.row;
+            div.innerHTML = `
+                <div class="at-num">${el.number}</div>
+                <div class="symbol">${el.symbol}</div>
+                <div class="at-mass">${el.mass}</div>
+            `;
+            grid.appendChild(div);
+        });
+    }
+
+    function showPeriodicTable() {
+        document.getElementById('exercise-view').style.display = 'none';
+        document.getElementById('quiz-view').style.display = 'none';
+        document.getElementById('main-nav-controls').style.display = 'none';
+        document.getElementById('periodic-table-view').style.display = 'flex';
+        renderPeriodicTable();
+    }
+
+    window.onload = init;
+</script>
