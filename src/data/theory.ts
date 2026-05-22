@@ -3,34 +3,156 @@ import type { TheoryEntry } from '../types';
 export const theoryData: Record<string, TheoryEntry> = {
   // --- Categorías para ExerciseView (Retrocompatibilidad) ---
   Atoms: {
-    title: 'Estructura Atómica',
-    content: `<h3>El Átomo</h3><p>Unidad básica de un elemento formada por protones, neutrones y electrones.</p>`,
-    svg: `<svg width="100" height="100"><circle cx="50" cy="50" r="40" fill="none" stroke="blue" /></svg>`
+    title: 'Estructura Atómica y Partículas Subatómicas',
+    content: `
+            <h3>El Átomo</h3>
+            <p>Unidad básica de un elemento que puede intervenir en una combinación química. Está formado por partículas subatómicas:</p>
+            <ul>
+                <li><b>Protones (p⁺):</b> Partículas con carga positiva localizadas en el núcleo. El número de protones es el <b>Número Atómico (Z)</b>.</li>
+                <li><b>Electrones (e⁻):</b> Partículas con carga negativa que rodean al núcleo. En un átomo neutro, p⁺ = e⁻.</li>
+                <li><b>Neutrones (n⁰):</b> Partículas sin carga en el núcleo. Contribuyen a la estabilidad nuclear.</li>
+            </ul>
+            <h3>Número Másico (A)</h3>
+            <p>Es la suma total de protones y neutrones en el núcleo. <span class="math">A = Z + n⁰</span>.</p>
+            <h3>Iones</h3>
+            <p>Cuando un átomo neutro gana o pierde electrones, adquiere una carga neta y se llama <b>ion</b>.</p>
+            <ul>
+                <li><b>Catión:</b> Ion con carga positiva (+). Se forma por la <b>pérdida</b> de uno o más electrones.</li>
+                <li><b>Anión:</b> Ion con carga negativa (-). Se forma por la <b>ganancia</b> de uno o más electrones.</li>
+            </ul>
+            <h3>Isótopos</h3>
+            <p>Átomos que tienen el mismo número atómico (Z) pero diferente número de masa (A). Esto significa que tienen el mismo número de protones pero <b>diferente número de neutrones</b>.</p>
+            `,
+    svg: `<svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="80" fill="rgba(52, 152, 219, 0.1)" stroke="#3498db" stroke-dasharray="5,5" />
+                <circle cx="100" cy="100" r="20" fill="#e74c3c" />
+                <text x="100" y="105" font-size="10" text-anchor="middle" fill="white">Núcleo</text>
+                <circle cx="60" cy="60" r="6" fill="#2c3e50" />
+                <text x="60" y="55" font-size="10" text-anchor="middle">e-</text>
+                <text x="100" y="195" font-size="12" text-anchor="middle">Átomo de Bohr</text>
+            </svg>`
   },
   Mass: {
-    title: 'Concepto de Mol',
-    content: `<h3>El Mol</h3><p>Cantidad de sustancia que contiene 6,022 x 10<sup>23</sup> partículas.</p>`,
-    svg: `<svg width="100" height="100"><rect x="10" y="10" width="80" height="80" fill="none" stroke="blue" /></svg>`
+    title: 'Concepto de Mol y Masa Atómica',
+    content: `
+            <h3>El Mol</h3>
+            <p>Unidad del SI para la cantidad de sustancia. Contiene tantas unidades elementales (átomos, moléculas) como átomos hay en 12 g de C-12.</p>
+            <h3>Constante de Avogadro (Nₐ)</h3>
+            <p>Es el número de partículas en un mol: <span class="math">6,022 × 10²³</span> partículas/mol.</p>
+            <h3>Masa Molar (M)</h3>
+            <p>Es la masa (en gramos) de un mol de unidades de una sustancia. Se expresa en <b>g/mol</b>. Es numéricamente igual a la masa atómica en uma.</p>
+            <h3>Masa Atómica Promedio</h3>
+            <p>Es el promedio de las masas de los isótopos naturales de un elemento, ponderado según su abundancia relativa en la naturaleza.</p>
+            `,
+    svg: `<svg width="200" height="120" viewBox="0 0 200 120">
+                <rect x="20" y="20" width="160" height="80" rx="10" fill="#ecf0f1" stroke="#2c3e50" />
+                <text x="100" y="50" font-size="14" text-anchor="middle" font-weight="bold">1 mol</text>
+                <text x="100" y="75" font-size="12" text-anchor="middle">= 6.022 × 10²³ part.</text>
+                <text x="100" y="95" font-size="12" text-anchor="middle">= Masa Molar (g)</text>
+            </svg>`
   },
   Config: {
     title: 'Configuración Electrónica',
-    content: `<h3>Configuración Electrónica</h3><p>Distribución de electrones en niveles y subniveles siguiendo el principio de Aufbau, exclusión de Pauli y regla de Hund.</p>`,
-    svg: `<svg width="100" height="100"><path d="M10,90 L90,10" stroke="blue" stroke-width="2" marker-end="url(#arrow)"/><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orientation="auto"><path d="M0,0 L0,6 L9,3 z" fill="blue" /></marker></defs></svg>`
+    content: `
+            <h3>Niveles y Subniveles</h3>
+            <p>Los electrones se distribuyen en niveles de energía (n=1, 2, 3...) y subniveles (s, p, d, f).</p>
+            <ul>
+                <li><b>Capacidades:</b> s: 2e⁻, p: 6e⁻, d: 10e⁻, f: 14e⁻.</li>
+            </ul>
+            <h3>Principios de Ordenamiento</h3>
+            <ul>
+                <li><b>Principio de Aufbau:</b> Los electrones llenan primero los orbitales de menor energía.</li>
+                <li><b>Principio de Exclusión de Pauli:</b> No puede haber dos electrones con los mismos números cuánticos (espines opuestos).</li>
+                <li><b>Regla de Hund:</b> En subniveles con múltiples orbitales (como p), los electrones se distribuyen con espines paralelos antes de aparearse.</li>
+            </ul>
+            <h3>Electrones de Valencia</h3>
+            <p>Son los electrones que se encuentran en el nivel de energía más alto. Determinan el comportamiento químico del elemento.</p>
+            `,
+    svg: `<svg width="220" height="160" viewBox="0 0 220 160">
+                <line x1="20" y1="140" x2="20" y2="20" stroke="#333" stroke-width="2" marker-end="url(#arrow)" />
+                <text x="5" y="80" font-size="10" transform="rotate(-90 5,80)">Energía aumenta</text>
+                <text x="40" y="140">1s</text><rect x="60" y="130" width="20" height="20" fill="none" stroke="#333" />
+                <text x="40" y="110">2s</text><rect x="60" y="100" width="20" height="20" fill="none" stroke="#333" />
+                <text x="40" y="80">2p</text>
+                <rect x="60" y="70" width="20" height="20" fill="none" stroke="#333" />
+                <rect x="82" y="70" width="20" height="20" fill="none" stroke="#333" />
+                <rect x="104" y="70" width="20" height="20" fill="none" stroke="#333" />
+                <defs>
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orientation="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333" /></marker>
+                </defs>
+            </svg>`
   },
   Trends: {
     title: 'Propiedades Periódicas',
-    content: `<h3>Tendencias Periódicas</h3><p>Variaciones sistemáticas de propiedades como el radio atómico, electronegatividad y energía de ionización en la tabla periódica.</p>`,
-    svg: `<svg width="100" height="100"><line x1="10" y1="80" x2="90" y2="80" stroke="green" stroke-width="2"/><line x1="90" y1="80" x2="90" y2="20" stroke="orange" stroke-width="2"/></svg>`
+    content: `
+            <h3>Radio Atómico</h3>
+            <p>Distancia entre el núcleo y el electrón más externo. <b>Aumenta hacia abajo</b> (más niveles) y <b>hacia la izquierda</b> (menor carga nuclear efectiva).</p>
+            <h3>Radio Iónico</h3>
+            <p>Tamaño de un ion. Los cationes son más pequeños que sus átomos neutros. Los aniones son más grandes debido a la repulsión electrónica.</p>
+            <h3>Energía de Ionización</h3>
+            <p>Energía mínima necesaria para remover un electrón de un átomo gaseoso. <b>Aumenta hacia arriba y hacia la derecha</b>.</p>
+            <h3>Electronegatividad</h3>
+            <p>Capacidad de un átomo para atraer electrones en un enlace químico. Escala de Pauling (máximo F=3,98, mínimo Fr=0,7).</p>
+            `,
+    svg: `<svg width="250" height="150" viewBox="0 0 250 150">
+                <rect x="50" y="30" width="150" height="80" fill="#f9f9f9" stroke="#333" />
+                <line x1="30" y1="120" x2="220" y2="120" stroke="blue" stroke-width="2" marker-end="url(#arrow-blue)" />
+                <text x="125" y="135" font-size="10" text-anchor="middle" fill="blue">Radio Atómico aumenta ←</text>
+                <line x1="220" y1="110" x2="220" y2="20" stroke="red" stroke-width="2" marker-end="url(#arrow-red)" />
+                <text x="235" y="65" font-size="10" transform="rotate(-90 235,65)" fill="red">Electronegatividad aumenta ↑</text>
+                <defs>
+                  <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orientation="auto"><path d="M0,0 L0,6 L9,3 z" fill="blue" /></marker>
+                  <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orientation="auto"><path d="M0,0 L0,6 L9,3 z" fill="red" /></marker>
+                </defs>
+            </svg>`
   },
   Bonds: {
-    title: 'Enlace Químico',
-    content: `<h3>Tipos de Enlace</h3><p><b>Iónico:</b> Transferencia de electrones.<br/><b>Covalente:</b> Compartición de electrones.<br/><b>Metálico:</b> Red de cationes en mar de electrones.</p>`,
-    svg: `<svg width="100" height="100"><circle cx="30" cy="50" r="15" fill="#bfdbfe" /><circle cx="70" cy="50" r="15" fill="#bfdbfe" /><circle cx="50" cy="50" r="5" fill="#3b82f6" /></svg>`
+    title: 'Enlaces Químicos y Estructura de Lewis',
+    content: `
+            <h3>Tipos de Enlace</h3>
+            <ul>
+                <li><b>Iónico:</b> Transferencia de electrones. Generalmente entre un metal (baja EN) y un no metal (alta EN). ΔEN > 1,7.</li>
+                <li><b>Covalente:</b> Compartición de electrones entre no metales.
+                    <ul>
+                        <li><b>Polar:</b> Compartición desigual (0,5 < ΔEN < 1,7).</li>
+                        <li><b>No Polar:</b> Compartición igual (ΔEN < 0,5).</li>
+                    </ul>
+                </li>
+            </ul>
+            <h3>Estructura de Lewis</h3>
+            <p>Representación de los electrones de valencia como puntos. Los átomos tienden a rodearse de 8 electrones para alcanzar estabilidad (<b>Regla del Octeto</b>).</p>
+            `,
+    svg: `<svg width="200" height="100" viewBox="0 0 200 100">
+                <circle cx="70" cy="50" r="25" fill="none" stroke="#3498db" />
+                <circle cx="130" cy="50" r="25" fill="none" stroke="#3498db" />
+                <circle cx="95" cy="50" r="4" fill="#f39c12" />
+                <circle cx="105" cy="50" r="4" fill="#f39c12" />
+                <text x="100" y="90" font-size="12" text-anchor="middle">Enlace Covalente</text>
+            </svg>`
   },
   Geometry: {
-    title: 'Geometría Molecular',
-    content: `<h3>Geometría Molecular (RPECV)</h3><p>La forma de las moléculas depende de la repulsión entre los pares de electrones alrededor del átomo central.</p>`,
-    svg: `<svg width="100" height="100"><circle cx="50" cy="50" r="10" fill="#1e293b" /><line x1="50" y1="40" x2="50" y2="15" stroke="#1e293b" /><line x1="40" y1="60" x2="20" y2="80" stroke="#1e293b" /><line x1="60" y1="60" x2="80" y2="80" stroke="#1e293b" /></svg>`
+    title: 'Geometría Molecular (RPECV)',
+    content: `
+            <h3>Teoría RPECV</h3>
+            <p>Establece que los pares de electrones alrededor de un átomo central se repelen entre sí, adoptando una forma que minimice esa repulsión.</p>
+            <ul>
+                <li><b>Lineal:</b> 2 nubes de electrones (180°). Ej: CO₂.</li>
+                <li><b>Plana Trigonal:</b> 3 nubes (120°). Ej: BF₃.</li>
+                <li><b>Tetraédrica:</b> 4 nubes (109.5°). Ej: CH₄.</li>
+                <li><b>Piramidal:</b> 3 enlaces + 1 par libre. Ej: NH₃.</li>
+                <li><b>Angular:</b> 2 enlaces + 1 o 2 pares libres. Ej: H₂O.</li>
+            </ul>
+            `,
+    svg: `<svg width="200" height="150" viewBox="0 0 200 150">
+                <circle cx="100" cy="75" r="10" fill="#2c3e50" />
+                <line x1="100" y1="75" x2="60" y2="40" stroke="#333" />
+                <line x1="100" y1="75" x2="140" y2="40" stroke="#333" />
+                <line x1="100" y1="75" x2="100" y2="120" stroke="#333" />
+                <circle cx="60" cy="40" r="8" fill="#3498db" />
+                <circle cx="140" cy="40" r="8" fill="#3498db" />
+                <circle cx="100" cy="120" r="8" fill="#3498db" />
+                <text x="100" y="145" font-size="12" text-anchor="middle">Forma Tetraédrica (3D)</text>
+            </svg>`
   },
   // --- UNIDADES PRINCIPALES (Nueva Sección de Teoría) ---
 
