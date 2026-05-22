@@ -148,14 +148,20 @@ export function PeriodicTable({ elements }: PeriodicTableProps) {
                       <p className="text-sm font-mono font-bold text-slate-700">{selectedElement.mass}</p>
                     </div>
                     <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Periodo / Grupo</p>
-                      <p className="text-sm font-bold text-slate-700">{selectedElement.row} / {selectedElement.col}</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Electronegatividad</p>
+                      <p className="text-sm font-mono font-bold text-orange-600">{selectedElement.electronegativity || "N/A"}</p>
                     </div>
                   </div>
 
-                  <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Estados de Oxidación</p>
-                    <p className="text-sm font-bold text-blue-600">{selectedElement.oxidationStates || "0"}</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Periodo / Grupo</p>
+                      <p className="text-sm font-bold text-slate-700">{selectedElement.row} / {selectedElement.col}</p>
+                    </div>
+                    <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase mb-1">Estados de Oxidación</p>
+                      <p className="text-sm font-bold text-blue-600">{selectedElement.oxidationStates || "0"}</p>
+                    </div>
                   </div>
 
                   <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">

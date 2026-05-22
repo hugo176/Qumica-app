@@ -3,6 +3,10 @@ import type { Colloquium } from '../../types';
 export const colloquium2: Colloquium = {
   id: 2,
   name: 'Coloquio N° 2',
+  images: [
+    '/images/colloquium-2/configuracion_electronica.png',
+    '/images/colloquium-2/propiedades_periodicas.png'
+  ],
   exercises: [
     {
       id: 1,

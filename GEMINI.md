@@ -33,7 +33,15 @@ Este proyecto es una aplicación web moderna diseñada para el estudio de Quími
 - **Estilos:** Priorizar clases de Tailwind y evitar CSS personalizado en `App.css` a menos que sea estrictamente necesario.
 
 ## Estado Actual
-- Migración completa del Coloquio N° 2.
-- Tabla periódica funcional e integrada.
-- Sistema de navegación lateral (Sidebar) implementado.
-- Soporte para visualización de teoría y ejercicios.
+- **Coloquios:** Migración completa de los Coloquios N° 2, 3, 4 y 5 (con resoluciones, teoría y trivias).
+- **Teoría:** Nueva sección de **Resúmenes Teóricos por Unidad** (Unidades 2 a 5) con:
+  - Explicaciones detalladas de conceptos clave (Estructura Atómica, Estequiometría, Fuerzas Intermoleculares, Redox/pH).
+  - Esquemas y diagramas visuales (SVG) integrados para apoyo al estudio.
+  - Sistema de navegación secuencial y tips de estudio.
+- **Funcionalidad:**
+  - Sistema de **Galería Visual** implementado para imágenes de apoyo teórica por coloquio.
+  - Generación de **PDF** de resoluciones activa para todos los coloquios.
+  - Tabla periódica funcional e integrada.
+  - Soporte de renderizado HTML (subíndices/fórmulas) en ejercicios, cuestionarios y teoría.
+- **Navegación:** Sidebar unificado (Coloquios + Teoría) y sistema de navegación secuencial (footer) adaptativo según el modo de vista.
+- **Tipado:** Validación estricta con TypeScript superada y build optimizado.

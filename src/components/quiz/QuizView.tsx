@@ -23,7 +23,10 @@ export function QuizView({ quiz }: QuizViewProps) {
         <CardTitle className="text-xl text-slate-800">Cuestionario de Conceptos</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="font-semibold text-lg text-slate-700 mb-6">{quiz.question}</p>
+        <p 
+          className="font-semibold text-lg text-slate-700 mb-6"
+          dangerouslySetInnerHTML={{ __html: quiz.question }}
+        />
         <div className="grid gap-3">
           {quiz.options.map((option, index) => (
             <button
@@ -43,12 +46,13 @@ export function QuizView({ quiz }: QuizViewProps) {
                   : "border-slate-100 bg-slate-50 opacity-50 cursor-not-allowed"
               )}
             >
-              <span className={cn(
-                "font-medium",
-                selectedOption === index && (option.correct ? "text-green-700" : "text-red-700")
-              )}>
-                {option.text}
-              </span>
+              <span 
+                className={cn(
+                  "font-medium",
+                  selectedOption === index && (option.correct ? "text-green-700" : "text-red-700")
+                )}
+                dangerouslySetInnerHTML={{ __html: option.text }}
+              />
               {selectedOption !== null && option.correct && (
                 <CheckCircle2 className="h-5 w-5 text-green-600" />
               )}

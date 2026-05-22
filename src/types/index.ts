@@ -26,6 +26,7 @@ export interface Colloquium {
   id: number;
   name: string;
   exercises: Exercise[];
+  images?: string[];
 }
 
 export interface TheoryEntry {
@@ -39,6 +40,7 @@ export interface PeriodicElement {
   symbol: string;
   name: string;
   mass: string;
+  electronegativity?: string;
   oxidationStates?: string;
   electronConfiguration: string;
   col: number;

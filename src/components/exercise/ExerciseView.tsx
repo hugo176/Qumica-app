@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { BookOpen, CheckCircle2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ExerciseViewProps {
   exercise: Exercise;
@@ -14,13 +14,18 @@ interface ExerciseViewProps {
 export function ExerciseView({ exercise, theory }: ExerciseViewProps) {
   const [showResolution, setShowResolution] = useState(false);
 
+  // Reset resolution view when changing exercise
+  useEffect(() => {
+    setShowResolution(false);
+  }, [exercise.id]);
+
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <Card className="mb-8">
         <CardHeader>
           <div className="flex justify-between items-start">
             <CardTitle className="text-3xl font-bold text-slate-800">
-              {exercise.title}
+              Problema {exercise.id}: {exercise.title}
             </CardTitle>
             <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold uppercase tracking-wider">
               {exercise.category}
