@@ -10,38 +10,36 @@ Este proyecto es una aplicación web moderna diseñada para el estudio de Quími
 - **Estilos:** Tailwind CSS 3.
 - **Componentes UI:** Shadcn/ui (manual) + Lucide React + Framer Motion.
 - **Alias de Rutas:** `@/*` apunta a `./src/*`.
+- **Generación de PDF:** jsPDF + jspdf-autotable (con sistema de limpieza de HTML).
 
 ## Estructura del Proyecto
 
 - `src/components/`:
-  - `ui/`: Componentes base (Button, Card, Accordion, etc.).
-  - `layout/`: Componentes de estructura (Sidebar, Navbar).
+  - `ui/`: Componentes base y utilidades visuales (`GalleryView`).
+  - `layout/`: Componentes de estructura (`Sidebar`).
   - `exercise/`: Lógica y vista de ejercicios.
-  - `periodic-table/`: Componente interactivo de la tabla periódica.
-  - `theory/`: Secciones de contenido teórico.
+  - `periodic-table/`: Tabla periódica interactiva con datos de electronegatividad.
+  - `theory/`: Secciones de contenido teórico detallado.
 - `src/data/`:
-  - `colloquiums/`: Datos de ejercicios organizados por coloquio.
-  - `theory.ts`: Contenido de las categorías teóricas.
-  - `elements.ts`: Datos de la tabla periódica.
-- `src/types/`: Definiciones de interfaces TypeScript para todo el proyecto.
+  - `colloquiums/`: Datos de ejercicios (Coloquios 2, 3, 4 y 5).
+  - `theory.ts`: Contenido de las categorías teóricas (Unidades y Categorías).
+  - `elements.ts`: Datos de la tabla periódica (Z, Masa, EN, Config, etc.).
+- `src/types/`: Definiciones de interfaces TypeScript.
 
 ## Convenciones y Reglas
 
-- **Tipado:** Usar siempre `import type` para importaciones de tipos (requerido por `verbatimModuleSyntax`).
-- **Componentes:** Seguir el patrón de Shadcn/ui para componentes de UI. Usar `cn` (en `src/lib/utils.ts`) para la concatenación de clases Tailwind.
-- **Datos:** Los nuevos coloquios deben añadirse en `src/data/colloquiums/` siguiendo la interfaz `Exercise`.
-- **Estilos:** Priorizar clases de Tailwind y evitar CSS personalizado en `App.css` a menos que sea estrictamente necesario.
+- **Tipado:** Usar siempre `import type` para importaciones de tipos.
+- **Datos:** Los nuevos coloquios deben seguir la interfaz `Exercise` y situarse en `src/data/colloquiums/`.
+- **Limpieza PDF:** Cualquier texto enviado al PDF debe pasar por la utilidad `cleanHTML` en `Sidebar.tsx`.
 
 ## Estado Actual
 - **Coloquios:** Migración completa de los Coloquios N° 2, 3, 4 y 5 (con resoluciones, teoría y trivias).
-- **Teoría:** Nueva sección de **Resúmenes Teóricos por Unidad** (Unidades 2 a 5) con:
-  - Explicaciones detalladas de conceptos clave (Estructura Atómica, Estequiometría, Fuerzas Intermoleculares, Redox/pH).
-  - Esquemas y diagramas visuales (SVG) integrados para apoyo al estudio.
-  - Sistema de navegación secuencial y tips de estudio.
+- **Teoría:** 
+  - **Unidades:** Resúmenes Teóricos por Unidad (2 a 5) con diagramas SVG.
+  - **Ejercicios:** Soporte teórico enriquecido para cada categoría (Atoms, Mass, Config, Trends, Bonds, Geometry).
 - **Funcionalidad:**
-  - Sistema de **Galería Visual** implementado para imágenes de apoyo teórica por coloquio.
-  - Generación de **PDF** de resoluciones activa para todos los coloquios.
-  - Tabla periódica funcional e integrada.
-  - Soporte de renderizado HTML (subíndices/fórmulas) en ejercicios, cuestionarios y teoría.
-- **Navegación:** Sidebar unificado (Coloquios + Teoría) y sistema de navegación secuencial (footer) adaptativo según el modo de vista.
-- **Tipado:** Validación estricta con TypeScript superada y build optimizado.
+  - **Galería Visual:** Sistema de imágenes de apoyo integrado.
+  - **PDF Dinámico:** Generación de resoluciones con soporte para fórmulas químicas simplificadas.
+  - **Tabla Periódica:** Incluye electronegatividad y estados de oxidación.
+- **Navegación:** Sidebar interactivo y navegación secuencial en el footer.
+- **Tipado:** Validación estricta con TypeScript superada.
