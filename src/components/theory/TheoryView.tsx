@@ -21,7 +21,7 @@ export const TheoryView: React.FC<TheoryViewProps> = ({ unit }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          <Card className="border-none shadow-lg bg-white/50 backdrop-blur-sm">
+          <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm">
             <CardContent className="p-8">
               <div 
                 className="prose prose-slate max-w-none 
@@ -47,12 +47,12 @@ export const TheoryView: React.FC<TheoryViewProps> = ({ unit }) => {
               </CardHeader>
               <CardContent className="p-6 flex justify-center items-center min-h-[250px]">
                 <div 
-                  className="bg-white p-4 rounded-xl shadow-inner border border-blue-100 w-full flex justify-center"
+                  className="bg-slate-50 p-4 rounded-xl shadow-inner border border-blue-100 w-full flex justify-center"
                   dangerouslySetInnerHTML={{ __html: unit.svg }}
                 />
               </CardContent>
               <div className="px-6 pb-6">
-                <div className="flex gap-3 p-4 bg-white/80 rounded-lg border border-blue-100 text-xs text-slate-600">
+                <div className="flex gap-3 p-4 bg-slate-50/80 rounded-lg border border-blue-100 text-xs text-slate-600">
                   <Info className="h-4 w-4 text-blue-500 shrink-0" />
                   <p>Utiliza este diagrama como referencia rápida para los conceptos principales de la unidad.</p>
                 </div>

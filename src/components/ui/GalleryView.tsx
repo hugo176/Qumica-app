@@ -67,7 +67,7 @@ export function GalleryView({ images, colloquiumName, onClose }: GalleryViewProp
           </div>
           
           {images.length > 1 && (
-            <div className="bg-white border-t border-slate-200 p-4 flex justify-center gap-2">
+            <div className="bg-slate-50 border-t border-slate-200 p-4 flex justify-center gap-2">
               {images.map((_, index) => (
                 <button
                   key={index}

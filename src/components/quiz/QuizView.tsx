@@ -36,7 +36,7 @@ export function QuizView({ quiz }: QuizViewProps) {
               className={cn(
                 "flex items-center justify-between p-4 rounded-xl border-2 text-left transition-all duration-300",
                 selectedOption === null
-                  ? "border-slate-200 bg-white hover:border-blue-400 hover:shadow-md"
+                  ? "border-slate-200 bg-slate-50 hover:border-blue-400 hover:shadow-md"
                   : selectedOption === index
                   ? option.correct
                     ? "border-green-500 bg-green-50 shadow-green-100 shadow-lg"
@@ -84,7 +84,7 @@ export function QuizView({ quiz }: QuizViewProps) {
             <Button 
               variant="outline" 
               size="sm" 
-              className="ml-auto bg-white" 
+              className="ml-auto bg-slate-50" 
               onClick={() => setSelectedOption(null)}
             >
               Reintentar

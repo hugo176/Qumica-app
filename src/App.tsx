@@ -91,7 +91,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 overflow-hidden">
+    <div className="flex h-screen w-full bg-slate-100 overflow-hidden">
       <Sidebar 
         colloquiums={colloquiums}
         currentColloquiumId={currentColloquiumId}
@@ -156,7 +156,7 @@ function App() {
         </ScrollArea>
 
         {!isPeriodicTableActive && !isGalleryActive && (
-          <footer className="h-20 bg-white border-t border-slate-200 px-8 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <footer className="h-20 bg-slate-50/80 backdrop-blur-md border-t border-slate-200 px-8 flex items-center justify-between shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.03)]">
             <Button 
               variant="ghost" 
               onClick={() => navigate(-1)}

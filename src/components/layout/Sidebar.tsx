@@ -150,12 +150,24 @@ export function Sidebar({
           variant={isPeriodicTableActive ? "default" : "secondary"}
           onClick={onShowPeriodicTable}
           className={cn(
-            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all",
+            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all mb-3",
             isPeriodicTableActive ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-700 text-slate-300"
           )}
         >
           <Atom className="h-4 w-4" />
           Tabla Periódica
+        </Button>
+
+        <Button 
+          variant={isTheoryActive && currentTheoryUnit === 'Unidad 3' ? "default" : "secondary"}
+          onClick={() => onSelectTheory('Unidad 3')}
+          className={cn(
+            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all",
+            isTheoryActive && currentTheoryUnit === 'Unidad 3' ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-700 text-slate-300"
+          )}
+        >
+          <BookOpen className="h-4 w-4" />
+          Unidad 3
         </Button>
       </div>
 
