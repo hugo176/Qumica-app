@@ -68,16 +68,6 @@ function App() {
     setShowQuiz(false);
   };
 
-  const handleShowExams = () => {
-    setIsExamsActive(true);
-    setCurrentColloquiumId(exam1.id);
-    setCurrentExerciseId(exam1.exercises[0].id);
-    setIsPeriodicTableActive(false);
-    setIsGalleryActive(false);
-    setIsTheoryActive(false);
-    setShowQuiz(false);
-  };
-
   const navigate = (delta: number) => {
     if (isTheoryActive) {
       const units = ['Repaso parcial N° 1', 'Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5'];
@@ -132,7 +122,6 @@ function App() {
         }}
         onShowGallery={handleShowGallery}
         onSelectTheory={handleSelectTheory}
-        onShowExams={handleShowExams}
         onClose={() => setIsSidebarOpen(false)}
         isPeriodicTableActive={isPeriodicTableActive}
         isGalleryActive={isGalleryActive}

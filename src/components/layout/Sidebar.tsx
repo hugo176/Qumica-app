@@ -28,7 +28,6 @@ interface SidebarProps {
   onShowPeriodicTable: () => void;
   onShowGallery: (colId: number) => void;
   onSelectTheory: (unitKey: string) => void;
-  onShowExams: () => void;
   onClose?: () => void;
   isPeriodicTableActive: boolean;
   isGalleryActive: boolean;
@@ -47,7 +46,6 @@ export function Sidebar({
   onShowPeriodicTable,
   onShowGallery,
   onSelectTheory,
-  onShowExams,
   onClose,
   isPeriodicTableActive,
   isGalleryActive,
