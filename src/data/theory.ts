@@ -62,28 +62,29 @@ const unidad2: TheoryEntry = {
 const unidad3: TheoryEntry = {
   title: 'Unidad 3: Estequiometría y Composición de Sustancias',
   content: `
-      <h3>1. El Mol y el Número de Avogadro</h3>
+      <h3><b>1. El Mol y el Número de Avogadro</b></h3><br>
       <p>El <b>mol</b> es la unidad del Sistema Internacional para medir la cantidad de una sustancia. Un mol de cualquier sustancia contiene exactamente <b>6,02214076 × 10²³</b> entidades elementales (átomos, moléculas, iones, etc.). Este valor es la <b>Constante de Avogadro (Nₐ)</b>.</p>
       
       <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 my-4">
         <p class="text-sm"><b>Relación fundamental:</b> 1 mol = 6,022 × 10²³ partículas</p>
       </div>
 
-      <h3>2. Masa Molar (M)</h3>
+      <h3><b>2. Masa Molar (M)</b></h3>
+      <br>
       <p>Es la masa (en gramos) de <b>un mol</b> de unidades de una sustancia. Se expresa en <b>g/mol</b>. Es numéricamente igual a la masa atómica o masa molecular expresada en unidades de masa atómica (uma).</p>
       <ul>
         <li>Para un elemento: 1 mol de Fe = 55,85 g.</li>
         <li>Para un compuesto: La masa molar es la suma de las masas atómicas de los elementos multiplicadas por sus subíndices.</li>
       </ul>
 
-      <h3>3. Composición Centesimal (Porcentual)</h3>
+      <h3><b>3. Composición Centesimal (Porcentual)</b></h3><br>
       <p>Es el porcentaje en masa de cada elemento presente en un compuesto. Se calcula dividiendo la masa total del elemento por la masa molar del compuesto y multiplicando por 100.</p>
       
       <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 my-4 italic">
         <p class="text-sm"><b>Fórmula:</b> % Elemento = [(átomos del elemento × masa atómica) / masa molar del compuesto] × 100</p>
       </div>
 
-      <h3>4. Fórmulas Mínima y Molecular</h3>
+      <h3><b>4. Fórmulas Mínima y Molecular</b></h3><br>
       <ul>
         <li><b>Fórmula Mínima (Empírica):</b> Indica la relación de números enteros más sencilla entre los átomos de un compuesto.</li>
         <li><b>Fórmula Molecular:</b> Indica el número real de átomos de cada elemento en una molécula. Es un múltiplo entero de la fórmula mínima.</li>
@@ -165,7 +166,33 @@ const unidad4: TheoryEntry = {
 const unidad5: TheoryEntry = {
   title: 'Unidad 5: Redox y Equilibrio Ácido-Base',
   content: `
-      <h3>1. Reacciones Redox</h3>
+      <h3>1. Identificación de Enlaces (Iónico vs. Covalente)</h3>
+      <p>Para determinar el tipo de interacción predominante en una sustancia, seguimos estos criterios fundamentales:</p>
+      
+      <div class="space-y-4 my-4">
+        <div class="p-3 bg-slate-50 border-l-4 border-blue-500 rounded">
+          <p class="text-sm"><b>Criterio 1: Naturaleza de los elementos</b></p>
+          <ul class="text-xs mt-1">
+            <li>• <b>Metal + No Metal:</b> Tiende a ser <b>Iónico</b> (ej. NaCl).</li>
+            <li>• <b>No Metal + No Metal:</b> Tiende a ser <b>Covalente</b> (ej. CO₂).</li>
+          </ul>
+        </div>
+
+        <div class="p-3 bg-slate-50 border-l-4 border-emerald-500 rounded">
+          <p class="text-sm"><b>Criterio 2: Diferencia de Electronegatividad (ΔEN)</b></p>
+          <ul class="text-xs mt-1">
+            <li>• <b>ΔEN > 1.7:</b> Enlace <b>Iónico</b> (Transferencia de electrones).</li>
+            <li>• <b>ΔEN < 1.7:</b> Enlace <b>Covalente</b> (Compartición de electrones).</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="text-sm"><b>Procedimiento práctico:</b><br>
+      1. Busca los valores de EN en la Tabla Periódica.<br>
+      2. Resta el valor menor del mayor (ΔEN = EN₁ - EN₂).<br>
+      3. Si el resultado es mayor a 1.7, trátalo como un compuesto iónico (formado por cationes y aniones).</p>
+
+      <h3>2. Reacciones Redox</h3>
       <ul>
         <li><b>Oxidación:</b> Pérdida de electrones (aumento del número de oxidación).</li>
         <li><b>Reducción:</b> Ganancia de electrones (disminución del número de oxidación).</li>
@@ -174,14 +201,14 @@ const unidad5: TheoryEntry = {
       </ul>
       <p><b>Balanceo Ion-Electrón:</b> Se dividen en hemirreacciones y se balancean átomos y cargas.</p>
 
-      <h3>2. Ácidos y Bases</h3>
+      <h3>3. Ácidos y Bases</h3>
       <ul>
         <li><b>Teoría Brönsted-Lowry:</b> Ácido dona H<sup>+</sup>, Base acepta H<sup>+</sup>.</li>
         <li><b>Autoionización del Agua:</b> <span class="math">K<sub>w</sub> = [H<sup>+</sup>][OH<sup>-</sup>] = 10<sup>-14</sup></span></li>
         <li><b>pH:</b> <span class="math">-log[H<sup>+</sup>]</span>. Escala de 0 (ácido) a 14 (básico).</li>
       </ul>
 
-      <h3>3. Sistemas Buffer (Tampón)</h3>
+      <h3>4. Sistemas Buffer (Tampón)</h3>
       <p>Soluciones que resisten cambios bruscos de pH. Compuestas por un ácido/base débil y su sal conjugada.</p>
     `,
   svg: `
@@ -206,10 +233,81 @@ const unidad5: TheoryEntry = {
     `
 };
 
+const repasoParcial1: TheoryEntry = {
+  title: 'Repaso Parcial N° 1',
+  content: `
+      <h3>1. Propiedades de la Materia</h3>
+      <p><b>Densidad (δ):</b> Es la relación entre la masa y el volumen de una sustancia (<span class="math">δ = m/V</span>).</p>
+      <ul>
+        <li><b>Propiedades Intensivas:</b> No dependen de la cantidad de materia (ej. Densidad, Punto de fusión). Son características de cada sustancia.</li>
+        <li><b>Propiedades Extensivas:</b> Dependen de la cantidad de materia (ej. Masa, Volumen).</li>
+      </ul>
+
+      <h3>2. Estructura Atómica e Isótopos</h3>
+      <ul>
+        <li><b>Z (Número Atómico):</b> Cantidad de protones. Identifica al elemento.</li>
+        <li><b>A (Número Másico):</b> Protones + Neutrones.</li>
+        <li><b>Isótopos:</b> Átomos con igual Z pero diferente A (varían en neutrones).</li>
+        <li><b>Masa Atómica Promedio:</b> Se calcula como el promedio ponderado de las masas de los isótopos: 
+            <br/><span class="math">Masa = (A₁ × %₁) + (A₂ × %₂) + ... / 100</span></li>
+        <li><b>Iones:</b> 
+            <br/>• <b>Catión (+):</b> Pierde electrones (e⁻ = Z - carga).
+            <br/>• <b>Anión (-):</b> Gana electrones (e⁻ = Z + carga).
+        </li>
+      </ul>
+
+      <h3>3. Estequiometría</h3>
+      <ul>
+        <li><b>Fórmula Mínima:</b> Relación más simple de átomos en un compuesto.</li>
+        <li><b>Fórmula Molecular:</b> Cantidad real de átomos. Es un múltiplo de la mínima.</li>
+        <li><b>Reactivo Limitante:</b> El reactivo que se consume totalmente en una reacción y determina la cantidad máxima de producto que se puede formar.</li>
+        <li><b>Combustión Completa:</b> <span class="math">Compuesto Orgánico + O₂ → CO₂ + H₂O</span></li>
+      </ul>
+
+      <h3>4. Reacciones Redox</h3>
+      <ul>
+        <li><b>Estado de Oxidación (EO):</b> Carga aparente de un átomo.
+            <br/>• Elementos libres = 0.
+            <br/>• Oxígeno = -2 (excepto peróxidos).
+            <br/>• Hidrógeno = +1 (excepto hidruros metálicos).
+        </li>
+        <li><b>Agente Oxidante:</b> Se reduce (gana e⁻), su EO disminuye.</li>
+        <li><b>Agente Reductor:</b> Se oxida (pierde e⁻), su EO aumenta.</li>
+        <li><b>Peso Equivalente (Oxidante/Reductor):</b> Masa Molar / electrones transferidos por mol de sustancia.</li>
+      </ul>
+    `,
+  svg: `
+      <svg width="300" height="180" viewBox="0 0 300 180">
+        <!-- Balanza para Densidad -->
+        <rect x="20" y="140" width="60" height="10" fill="#94a3b8" />
+        <rect x="35" y="110" width="30" height="30" fill="#3b82f6" opacity="0.7" />
+        <text x="50" y="100" text-anchor="middle" font-size="8" font-weight="bold">Densidad</text>
+
+        <!-- Átomo para Estructura -->
+        <circle cx="150" cy="80" r="15" fill="#ef4444" />
+        <circle cx="150" cy="80" r="40" fill="none" stroke="#3b82f6" stroke-dasharray="4" />
+        <circle cx="120" cy="55" r="4" fill="#1e293b" />
+        <text x="150" y="135" text-anchor="middle" font-size="8" font-weight="bold">Átomo (Z, A)</text>
+
+        <!-- Reacción para Estequiometría/Redox -->
+        <path d="M220,100 L280,100" stroke="#10b981" stroke-width="2" marker-end="url(#arrow-green)" />
+        <text x="250" y="90" text-anchor="middle" font-size="8" font-weight="bold">Reacción</text>
+        <text x="250" y="120" text-anchor="middle" font-size="8" fill="#10b981">RL y Redox</text>
+
+        <defs>
+          <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orientation="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="#10b981" />
+          </marker>
+        </defs>
+      </svg>
+    `
+};
+
 // --- EXPORTACIÓN DE DATOS ---
 
 export const theoryData: Record<string, TheoryEntry> = {
-  // --- Categorías para ExerciseView (Retrocompatibilidad) ---
+  // --- Repaso Parcial ---
+  'Repaso parcial N° 1': repasoParcial1,
   Atoms: {
     title: 'Estructura Atómica y Partículas Subatómicas',
     content: `
@@ -383,6 +481,10 @@ export const theoryData: Record<string, TheoryEntry> = {
   'Estequiometría': unidad3,
   'Rendimiento': unidad3,
   'Estequiometría de Gases': unidad3,
+  'Propiedades de la Materia': unidad2,
+  'Estructura Atómica': unidad2,
+  'Redox': unidad5,
+  'Oxidación de Hierro (II)': unidad5,
   'Soluciones': unidad4,
   'Preparación de Soluciones': unidad4,
   'Dilución': unidad4,

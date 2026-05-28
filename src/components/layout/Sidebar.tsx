@@ -5,7 +5,8 @@ import {
   FlaskConical, 
   Download,
   Atom,
-  Image as ImageIcon
+  Image as ImageIcon,
+  X
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -20,29 +21,39 @@ import autoTable from 'jspdf-autotable';
 
 interface SidebarProps {
   colloquiums: Colloquium[];
+  exams: Colloquium[];
   currentColloquiumId: number;
   currentExerciseId: number;
-  onSelectExercise: (colId: number, exId: number) => void;
+  onSelectExercise: (colId: number, exId: number, isExam?: boolean) => void;
   onShowPeriodicTable: () => void;
   onShowGallery: (colId: number) => void;
   onSelectTheory: (unitKey: string) => void;
+  onShowExams: () => void;
+  onClose?: () => void;
   isPeriodicTableActive: boolean;
   isGalleryActive: boolean;
   isTheoryActive: boolean;
+  isExamsActive: boolean;
+  isMobileOpen?: boolean;
   currentTheoryUnit: string | null;
 }
 
 export function Sidebar({ 
   colloquiums, 
+  exams,
   currentColloquiumId, 
   currentExerciseId, 
   onSelectExercise,
   onShowPeriodicTable,
   onShowGallery,
   onSelectTheory,
+  onShowExams,
+  onClose,
   isPeriodicTableActive,
   isGalleryActive,
   isTheoryActive,
+  isExamsActive,
+  isMobileOpen,
   currentTheoryUnit
 }: SidebarProps) {
 
@@ -136,8 +147,20 @@ export function Sidebar({
   };
 
   return (
-    <aside className="w-72 bg-slate-900 text-slate-100 flex flex-col shadow-xl z-20">
-      <div className="p-6 border-b border-slate-700">
+    <aside className={cn(
+      "w-72 bg-slate-900 text-slate-100 flex flex-col shadow-xl z-50 h-full transition-all duration-300",
+      "fixed inset-y-0 left-0 lg:static lg:translate-x-0",
+      isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+    )}>
+      <div className="p-6 border-b border-slate-700 relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-2 top-2 lg:hidden text-slate-400 hover:text-white"
+          onClick={onClose}
+        >
+          <X className="h-5 w-5" />
+        </Button>
         <div className="flex items-center gap-3 mb-6">
           <FlaskConical className="h-8 w-8 text-blue-400 animate-pulse" />
           <div>
@@ -148,26 +171,14 @@ export function Sidebar({
 
         <Button 
           variant={isPeriodicTableActive ? "default" : "secondary"}
-          onClick={onShowPeriodicTable}
+          onClick={() => { onShowPeriodicTable(); onClose?.(); }}
           className={cn(
-            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all mb-3",
+            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all",
             isPeriodicTableActive ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-700 text-slate-300"
           )}
         >
           <Atom className="h-4 w-4" />
           Tabla Periódica
-        </Button>
-
-        <Button 
-          variant={isTheoryActive && currentTheoryUnit === 'Unidad 3' ? "default" : "secondary"}
-          onClick={() => onSelectTheory('Unidad 3')}
-          className={cn(
-            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all",
-            isTheoryActive && currentTheoryUnit === 'Unidad 3' ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-700 text-slate-300"
-          )}
-        >
-          <BookOpen className="h-4 w-4" />
-          Unidad 3
         </Button>
       </div>
 
@@ -182,13 +193,13 @@ export function Sidebar({
             <Accordion 
               type="single" 
               collapsible 
-              defaultValue={`item-${currentColloquiumId}`}
+              defaultValue={!isExamsActive ? `item-${currentColloquiumId}` : undefined}
               className="w-full"
             >
               {colloquiums.map((col) => (
                 <AccordionItem key={col.id} value={`item-${col.id}`} className="border-slate-800">
                   <div className="flex items-center group pr-2">
-                    <AccordionTrigger className="flex-1 hover:no-underline hover:text-blue-400 py-3 text-sm font-bold">
+                    <AccordionTrigger className="flex-1 hover:no-underline hover:text-blue-400 py-3 text-sm font-bold text-left">
                       {col.name}
                     </AccordionTrigger>
                     <div className="flex items-center gap-1">
@@ -206,6 +217,7 @@ export function Sidebar({
                           onClick={(e) => {
                             e.stopPropagation();
                             onShowGallery(col.id);
+                            onClose?.();
                           }}
                         >
                           <ImageIcon className="h-4 w-4" />
@@ -230,10 +242,64 @@ export function Sidebar({
                       {col.exercises.map((ex) => (
                         <button
                           key={ex.id}
-                          onClick={() => onSelectExercise(col.id, ex.id)}
+                          onClick={() => { onSelectExercise(col.id, ex.id, false); onClose?.(); }}
                           className={cn(
                             "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
-                            !isPeriodicTableActive && currentColloquiumId === col.id && currentExerciseId === ex.id
+                            !isPeriodicTableActive && !isExamsActive && currentColloquiumId === col.id && currentExerciseId === ex.id
+                              ? "bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                              : "hover:bg-slate-800 text-slate-400 hover:text-white"
+                          )}
+                        >
+                          Problema {ex.id}: {ex.title}
+                        </button>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </section>
+
+          <section>
+            <div className="px-2 mb-3 flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+              <FlaskConical className="h-3 w-3" />
+              Modelos de Parciales
+            </div>
+            
+            <Accordion 
+              type="single" 
+              collapsible 
+              defaultValue={isExamsActive ? `item-${currentColloquiumId}` : undefined}
+              className="w-full"
+            >
+              {exams.map((exam) => (
+                <AccordionItem key={exam.id} value={`item-${exam.id}`} className="border-slate-800">
+                  <div className="flex items-center group pr-2">
+                    <AccordionTrigger className="flex-1 hover:no-underline hover:text-blue-400 py-3 text-sm font-bold text-left">
+                      {exam.name}
+                    </AccordionTrigger>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-slate-500 hover:text-blue-400 hover:bg-slate-800 shrink-0"
+                      title="Descargar PDF"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        generatePDF(exam);
+                      }}
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-1 pl-2 pb-2">
+                      {exam.exercises.map((ex) => (
+                        <button
+                          key={ex.id}
+                          onClick={() => { onSelectExercise(exam.id, ex.id, true); onClose?.(); }}
+                          className={cn(
+                            "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
+                            !isPeriodicTableActive && isExamsActive && currentColloquiumId === exam.id && currentExerciseId === ex.id
                               ? "bg-blue-600 text-white shadow-md shadow-blue-900/20"
                               : "hover:bg-slate-800 text-slate-400 hover:text-white"
                           )}
@@ -254,10 +320,10 @@ export function Sidebar({
               Teoría
             </div>
             <div className="flex flex-col gap-1 px-1">
-              {['Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5'].map((unit) => (
+              {['Repaso parcial N° 1', 'Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5'].map((unit) => (
                 <button
                   key={unit}
-                  onClick={() => onSelectTheory(unit)}
+                  onClick={() => { onSelectTheory(unit); onClose?.(); }}
                   className={cn(
                     "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
                     isTheoryActive && currentTheoryUnit === unit

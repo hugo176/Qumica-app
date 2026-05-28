@@ -97,11 +97,11 @@ export function PeriodicTable({ elements }: PeriodicTableProps) {
       body: elements
         .sort((a, b) => a.number - b.number)
         .map((el) => [
-          el.number,
+          el.number.toString(),
           el.symbol,
           el.name,
           el.mass,
-          el.electronegativity,
+          el.electronegativity || "N/A",
           cleanText(el.oxidationStates || "0"),
           cleanText(el.electronConfiguration),
         ]),
@@ -219,7 +219,7 @@ export function PeriodicTable({ elements }: PeriodicTableProps) {
     <div className="w-full max-w-[1600px] mx-auto p-4 flex flex-col gap-8">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Main Table Area */}
-        <Card className="flex-1 shadow-xl border-slate-200 overflow-hidden">
+        <Card className="flex-1 shadow-xl border-slate-200">
           <CardHeader className="bg-slate-50 border-b py-4 flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-slate-800">Tabla Periódica de los Elementos</CardTitle>
             <div className="flex gap-2">
@@ -243,9 +243,9 @@ export function PeriodicTable({ elements }: PeriodicTableProps) {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="overflow-x-auto pb-4 custom-scrollbar">
-              <div className="grid grid-cols-[25px_repeat(18,minmax(50px,1fr))] gap-1 min-w-[1000px]">
+          <CardContent className="p-2 sm:p-6 overflow-hidden">
+            <div className="overflow-x-auto pb-4 custom-scrollbar touch-pan-x">
+              <div className="grid grid-cols-[25px_repeat(18,minmax(50px,1fr))] gap-1 min-w-[1024px]">
                 {/* Header: Groups */}
                 <div className="h-6" />
                 {groups.map((g) => (
