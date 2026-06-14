@@ -1,4 +1,4 @@
-import type { PeriodicElement } from '../types';
+import type { PeriodicElement } from '../../types';
 
 export const elements: PeriodicElement[] = [
   // Period 1

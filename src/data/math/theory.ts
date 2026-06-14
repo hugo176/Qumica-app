@@ -1,4 +1,4 @@
-import type { TheoryEntry } from '../types';
+import type { TheoryEntry } from '../../types';
 
 export const mathTheoryData: Record<string, TheoryEntry> = {
   'Funciones': {

@@ -1,4 +1,4 @@
-import type { Colloquium } from "../../types";
+import type { Colloquium } from "../../../types";
 
 export const colloquium3: Colloquium = {
   id: 3,

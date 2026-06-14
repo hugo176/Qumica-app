@@ -1,4 +1,4 @@
-import type { TheoryEntry } from '../types';
+import type { TheoryEntry } from '../../types';
 
 // --- DEFINICIONES DE UNIDADES ---
 

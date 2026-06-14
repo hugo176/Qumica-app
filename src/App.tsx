@@ -58,7 +58,7 @@ function App() {
   }, [currentColloquiumId, isExamsActive, colloquiums, exams]);
 
   const currentExerciseIndex = useMemo(() => 
-    currentColloquium.exercises.findIndex(ex => ex.id === currentExerciseId),
+    currentColloquium.exercises.findIndex((ex: any) => ex.id === currentExerciseId),
   [currentColloquium, currentExerciseId]);
 
   const currentExercise = currentColloquium.exercises[currentExerciseIndex] || currentColloquium.exercises[0];
