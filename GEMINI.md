@@ -21,28 +21,21 @@ Este proyecto es una aplicación web moderna diseñada para el estudio de Quími
   - `periodic-table/`: Tabla periódica interactiva y secciones educativas.
   - `theory/`: Secciones de contenido teórico detallado (Diseño fluido).
 - `src/data/`:
-  - `colloquiums/`: Datos de ejercicios (Coloquios 2, 3, 4 y 5).
-  - `exams/`: Modelos de parcial con resoluciones detalladas.
-  - `theory.ts`: Contenido de las categorías teóricas (Unidades y Categorías).
-  - `elements.ts`: Datos de la tabla periódica (Z, Masa, EN, Config, etc.).
+  - `chemistry/`: Datos de Química (Coloquios, Exámenes, Tabla Periódica).
+  - `math/`: Datos de Matemática (Coloquios, Teoría).
+  - `shared/`: Tipos o utilidades comunes.
 - `src/types/`: Definiciones de interfaces TypeScript.
 
 ## Convenciones y Reglas
 
 - **Tipado:** Usar siempre `import type` para importaciones de tipos.
-- **Datos:** Los nuevos coloquios deben seguir la interfaz `Exercise` y situarse en `src/data/colloquiums/`.
-- **Limpieza PDF:** Cualquier texto enviado al PDF debe pasar por la utilidad `cleanHTML` en `Sidebar.tsx` o `cleanText` en `PeriodicTable.tsx`.
+- **Datos:** Los nuevos coloquios deben seguir la interfaz `Exercise` y situarse en la carpeta correspondiente de la materia en `src/data/`.
+- **Materias:** Para añadir una nueva materia, se debe actualizar el tipo `Subject` en `App.tsx` y añadir el toggle correspondiente en el `Sidebar`.
 
 ## Estado Actual
-- **Coloquios:** Migración completa de los Coloquios N° 2, 3, 4 y 5 (con resoluciones, teoría y trivias).
-- **Modelos de Parcial:** Integración de una sección de "Simulacro de Examen" con dos modelos resueltos (Densidad, Isótopos, Estequiometría y Redox).
-- **Teoría:** 
-  - **Unidades:** Resúmenes Teóricos por Unidad (2 a 5). Se añadió acceso directo a la **Unidad 3** y criterios de identificación de enlaces en la **Unidad 5**.
-  - **Ejercicios:** Soporte teórico enriquecido, incluyendo conceptos como **Isoelectrónico**.
-- **Tabla Periódica:** 
-  - **Educativa:** Se añadieron secciones detalladas de **Tendencias Periódicas** y **Enlaces Químicos** (Lewis, Polaridad Molecular, ΔEN).
-  - **Descargas:** Sistema de PDF dual (Datos Elementos y Guía Teórica).
-- **Funcionalidad:**
-  - **Responsividad:** Aplicación 100% adaptable a móviles mediante un sistema de menú hamburguesa y layouts fluidos.
-  - **PDF Dinámico:** Generación de resoluciones con limpieza automática de caracteres Unicode.
-- **Validación:** El proyecto cumple con estándares estrictos de TypeScript y compila exitosamente (`npm run build`).
+- **Arquitectura Multi-materia:** La aplicación ahora soporta tanto **Química** como **Matemática** mediante un selector en el Sidebar.
+- **Química:** Migración completa de los Coloquios N° 2, 3, 4 y 5.
+- **Matemática:** Inicio de la integración con la **Unidad 4 (Funciones)**. Estructura base creada y lista para recibir contenido de los PDFs.
+- **Tabla Periódica:** Exclusiva para el modo Química.
+- **PDF Dinámico:** Generación de resoluciones adaptada a la materia activa.
+- **Validación:** El proyecto cumple con estándares estrictos de TypeScript y compila exitosamente.

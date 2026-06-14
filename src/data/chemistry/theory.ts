@@ -303,6 +303,132 @@ const repasoParcial1: TheoryEntry = {
     `
 };
 
+const unidad6: TheoryEntry = {
+  title: 'Unidad 6: Estado Gaseoso',
+  content: `
+      <h3><b>1. Características del Estado Gaseoso</b></h3></br>
+      <p>Los gases se distinguen de los sólidos y líquidos por las grandes distancias entre sus moléculas y la ausencia de fuerzas de atracción significativas en condiciones ideales.</p>
+      <ul></br>
+        <li><b>Expansibilidad:</b> Ocupan todo el volumen del recipiente.</li>
+        <li><b>Compresibilidad:</b> Pueden reducir su volumen drásticamente bajo presión.</li>
+        <li><b>Difusión:</b> Mezcla gradual de moléculas de un gas con otro.</li>
+        <li><b>Efusión:</b> Escape de un gas a través de un orificio pequeño.</li>
+      </ul></br>
+      
+      <h3><b>2. Leyes de los Gases Ideales</b></h3></br>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+        <div class="p-3 bg-blue-50 border border-blue-100 rounded">
+          <p class="text-sm"><b>Ley de Boyle (T constante):</b></p>
+          <p class="text-xs">El volumen es inversamente proporcional a la presión. <br/> <span class="math">P₁V₁ = P₂V₂</span></p>
+        </div>
+        <div class="p-3 bg-emerald-50 border border-emerald-100 rounded">
+          <p class="text-sm"><b>Ley de Charles (P constante):</b></p>
+          <p class="text-xs">El volumen es directamente proporcional a la temperatura absoluta. <br/> <span class="math">V₁/T₁ = V₂/T₂</span></p>
+        </div>
+        <div class="p-3 bg-amber-50 border border-amber-100 rounded">
+          <p class="text-sm"><b>Ley de Gay-Lussac (V constante):</b></p>
+          <p class="text-xs">La presión es directamente proporcional a la temperatura absoluta. <br/> <span class="math">P₁/T₁ = P₂/T₂</span></p>
+        </div>
+        <div class="p-3 bg-slate-50 border border-slate-100 rounded">
+          <p class="text-sm"><b>Ecuación Combinada:</b></p>
+          <p class="text-xs">Relaciona P, V y T para una cantidad fija de gas. <br/> <span class="math">(P₁V₁)/T₁ = (P₂V₂)/T₂</span></p>
+        </div>
+      </div>
+
+      <div class="bg-red-50 p-3 rounded border border-red-200 my-4">
+        <p class="text-sm text-red-800 font-bold italic">¡Advertencia! Todas las leyes requieren el uso de la temperatura en Kelvin (K = °C + 273,15).</p>
+      </div>
+
+      <h3>3. Unidades de Medida y Conversiones</h3>
+      <p>Para resolver problemas de gases, es fundamental el manejo correcto de las siguientes magnitudes:</p>
+
+      <div class="space-y-4 my-4">
+        <div class="p-3 bg-slate-50 border-l-4 border-blue-400 rounded">
+          <p class="text-sm"><b>Presión (P):</b></p>
+          <p class="text-xs mt-1">Fuerza ejercida por el gas por unidad de área.</p>
+          <ul class="text-xs mt-1 list-disc ml-4">
+            <li>1 atm = 760 mmHg (o Torr)</li>
+            <li>1 atm = 101.325 Pa = 101,325 kPa</li>
+            <li>1 atm = 1,01325 bar</li>
+          </ul>
+        </div>
+
+        <div class="p-3 bg-slate-50 border-l-4 border-emerald-400 rounded">
+          <p class="text-sm"><b>Volumen (V):</b></p>
+          <p class="text-xs mt-1">Espacio ocupado por el gas.</p>
+          <ul class="text-xs mt-1 list-disc ml-4">
+            <li>1 L = 1000 mL = 1000 cm³</li>
+            <li>1 L = 1 dm³</li>
+            <li>1 m³ = 1000 L</li>
+          </ul>
+        </div>
+
+        <div class="p-3 bg-slate-50 border-l-4 border-amber-400 rounded">
+          <p class="text-sm"><b>Temperatura (T):</b></p>
+          <p class="text-xs mt-1 italic">Debe usarse siempre la escala absoluta.</p>
+          <ul class="text-xs mt-1 list-disc ml-4">
+            <li>T(K) = t(°C) + 273,15</li>
+          </ul>
+        </div>
+
+        <div class="p-3 bg-slate-50 border-l-4 border-purple-400 rounded">
+          <p class="text-sm"><b>Cantidad de Sustancia (n):</b></p>
+          <p class="text-xs mt-1">Medida en moles.</p>
+          <ul class="text-xs mt-1 list-disc ml-4">
+            <li>n (mol) = masa (g) / Masa Molar (g/mol)</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>4. Ecuación de Estado de los Gases Ideales</h3>
+
+      <p>Combina todas las variables en una sola expresión: <span class="math">P × V = n × R × T</span></p>
+      </br><p><b>Constante R:</b> Su valor depende de las unidades utilizadas:</p>
+      <ul>
+        <li>R = <b>0,08206 L·atm/(K·mol)</b> (Más común)</li>
+        <li>R = <b>8,314 J/(K·mol)</b> (Unidades SI)</li>
+        <li>R = <b>62,36 L·mmHg/(K·mol)</b></li>
+      </ul></br>
+      <p><b>Volumen Molar en CNPT:</b> En Condiciones Normales de Presión y Temperatura (0 °C y 1 atm), <b>1 mol</b> de cualquier gas ideal ocupa <b>22,414 Litros</b>.</p>
+</br>
+      <h3><b>4. Teoría Cinética Molecular</b></h3></br>
+      <p>Explica el comportamiento de los gases a nivel microscópico:</p>
+      <ol class="text-sm space-y-2">
+        <li>1. Los gases consisten en partículas pequeñas en movimiento aleatorio constante.</li>
+        <li>2. El volumen de las partículas es despreciable frente al volumen total.</li>
+        <li>3. No hay fuerzas de atracción o repulsión entre partículas.</li>
+        <li>4. Los choques son perfectamente elásticos (no se pierde energía).</li>
+        <li>5. La energía cinética promedio es proporcional a la temperatura absoluta.</li>
+      </ol></br>
+
+      <h3><b>5. Mezcla de Gases (Ley de Dalton)</b></h3></br>
+      <p>En una mezcla de gases que no reaccionan entre sí, la presión total es la suma de las presiones que cada gas ejercería si estuviera solo.</p>
+      <p><span class="math">P<sub>total</sub> = Σ P<sub>i</sub> = P₁ + P₂ + P₃ + ...</span></p>
+      </br><p><b>Presión Parcial (P<sub>i</sub>):</b> Se calcula mediante la fracción molar (χ<sub>i</sub>):</p>
+      <p class="ml-4"><span class="math">χ<sub>i</sub> = n<sub>i</sub> / n<sub>total</sub></span></p>
+      <p class="ml-4"><span class="math">P<sub>i</sub> = χ<sub>i</sub> × P<sub>total</sub></span></p>
+
+      </br><h3><b>6. Gases Reales vs. Ideales</b></h3></br>
+      <p>Los gases reales se desvían del comportamiento ideal a <b>presiones muy altas</b> y <b>temperaturas muy bajas</b>, donde el volumen de las moléculas y las fuerzas intermoleculares dejan de ser despreciables. Para estos casos se utiliza la <b>Ecuación de van der Waals</b>.</p>
+    `,
+  svg: `
+      <svg width="300" height="150" viewBox="0 0 300 150">
+        <!-- Recipiente con partículas -->
+        <rect x="20" y="30" width="100" height="100" rx="5" fill="none" stroke="#64748b" stroke-width="2" />
+        <circle cx="40" cy="50" r="3" fill="#3b82f6" />
+        <circle cx="90" cy="60" r="3" fill="#3b82f6" />
+        <circle cx="60" cy="80" r="3" fill="#3b82f6" />
+        <circle cx="35" cy="110" r="3" fill="#3b82f6" />
+        <circle cx="100" cy="100" r="3" fill="#3b82f6" />
+        <text x="70" y="20" text-anchor="middle" font-size="10" font-weight="bold">Gas Ideal</text>
+
+        <!-- Fórmula central -->
+        <rect x="140" y="50" width="140" height="50" rx="10" fill="#eff6ff" stroke="#3b82f6" />
+        <text x="210" y="82" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e40af">PV = nRT</text>
+      </svg>
+    `
+};
+
 // --- EXPORTACIÓN DE DATOS ---
 
 export const theoryData: Record<string, TheoryEntry> = {
@@ -503,9 +629,15 @@ export const theoryData: Record<string, TheoryEntry> = {
   'Estequiometría Redox': unidad5,
   'General': unidad5,
 
+  // --- Mapeos para Coloquio 6 ---
+  'Gases': unidad6,
+  'Leyes de los Gases': unidad6,
+  'Mezcla de Gases': unidad6,
+
   // --- UNIDADES ---
   'Unidad 2': unidad2,
   'Unidad 3': unidad3,
   'Unidad 4': unidad4,
-  'Unidad 5': unidad5
+  'Unidad 5': unidad5,
+  'Unidad 6': unidad6
 };

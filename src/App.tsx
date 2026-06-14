@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react';
-import { colloquium2 } from './data/colloquiums/colloquium-2';
-import { colloquium3 } from './data/colloquiums/colloquium-3';
-import { colloquium4 } from './data/colloquiums/colloquium-4';
-import { colloquium5 } from './data/colloquiums/colloquium-5';
-import { exam1 } from './data/exams/exam-1';
-import { exam2 } from './data/exams/exam-2';
-import { theoryData } from './data/theory';
-import { elements } from './data/elements';
+import { colloquium2 } from './data/chemistry/colloquiums/colloquium-2';
+import { colloquium3 } from './data/chemistry/colloquiums/colloquium-3';
+import { colloquium4 } from './data/chemistry/colloquiums/colloquium-4';
+import { colloquium5 } from './data/chemistry/colloquiums/colloquium-5';
+import { colloquium6 } from './data/chemistry/colloquiums/colloquium-6';
+import { exam1 } from './data/chemistry/exams/exam-1';
+import { exam2 } from './data/chemistry/exams/exam-2';
+import { theoryData } from './data/chemistry/theory';
+import { elements } from './data/chemistry/elements';
 import { Sidebar } from './components/layout/Sidebar';
 import { ExerciseView } from './components/exercise/ExerciseView';
 import { PeriodicTable } from './components/periodic-table/PeriodicTable';
@@ -17,10 +18,18 @@ import { Button } from './components/ui/button';
 import { ChevronLeft, ChevronRight, ClipboardCheck, Menu, FlaskConical } from 'lucide-react';
 import { ScrollArea } from './components/ui/scroll-area';
 
-const colloquiums = [colloquium2, colloquium3, colloquium4, colloquium5];
-const exams = [exam1, exam2];
+import { mathUnit4 } from './data/math/colloquiums/math-unit-4';
+import { mathTheoryData } from './data/math/theory';
+
+const chemistryColloquiums = [colloquium2, colloquium3, colloquium4, colloquium5, colloquium6];
+const chemistryExams = [exam1, exam2];
+const mathColloquiums = [mathUnit4];
+const mathExams: any[] = [];
+
+type Subject = 'chemistry' | 'math';
 
 function App() {
+  const [currentSubject, setCurrentSubject] = useState<Subject>('chemistry');
   const [currentColloquiumId, setCurrentColloquiumId] = useState(colloquium2.id);
   const [currentExerciseId, setCurrentExerciseId] = useState(colloquium2.exercises[0].id);
   const [isPeriodicTableActive, setIsPeriodicTableActive] = useState(false);
@@ -31,16 +40,40 @@ function App() {
   const [currentTheoryUnit, setCurrentTheoryUnit] = useState<string | null>(null);
   const [showQuiz, setShowQuiz] = useState(false);
 
+  const colloquiums = useMemo(() => 
+    currentSubject === 'chemistry' ? chemistryColloquiums : mathColloquiums
+  , [currentSubject]);
+
+  const exams = useMemo(() => 
+    currentSubject === 'chemistry' ? chemistryExams : mathExams
+  , [currentSubject]);
+
+  const currentTheoryData = useMemo(() => 
+    currentSubject === 'chemistry' ? theoryData : mathTheoryData
+  , [currentSubject]);
+
   const currentColloquium = useMemo(() => {
     const list = isExamsActive ? exams : colloquiums;
     return list.find(c => c.id === currentColloquiumId) || list[0];
-  }, [currentColloquiumId, isExamsActive]);
+  }, [currentColloquiumId, isExamsActive, colloquiums, exams]);
 
   const currentExerciseIndex = useMemo(() => 
     currentColloquium.exercises.findIndex(ex => ex.id === currentExerciseId),
   [currentColloquium, currentExerciseId]);
 
-  const currentExercise = currentColloquium.exercises[currentExerciseIndex];
+  const currentExercise = currentColloquium.exercises[currentExerciseIndex] || currentColloquium.exercises[0];
+
+  const handleSelectSubject = (subject: Subject) => {
+    setCurrentSubject(subject);
+    const firstCol = subject === 'chemistry' ? chemistryColloquiums[0] : mathColloquiums[0];
+    setCurrentColloquiumId(firstCol.id);
+    setCurrentExerciseId(firstCol.exercises[0].id);
+    setIsExamsActive(false);
+    setIsPeriodicTableActive(false);
+    setIsGalleryActive(false);
+    setIsTheoryActive(false);
+    setShowQuiz(false);
+  };
 
   const handleSelectExercise = (colId: number, exId: number, isExam: boolean = false) => {
     setIsExamsActive(isExam);
@@ -68,13 +101,18 @@ function App() {
     setShowQuiz(false);
   };
 
+  const theoryUnits = useMemo(() => 
+    currentSubject === 'chemistry' 
+      ? ['Repaso parcial N° 1', 'Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5', 'Unidad 6']
+      : ['Conceptos Básicos', 'Estadística Descriptiva', 'Funciones']
+  , [currentSubject]);
+
   const navigate = (delta: number) => {
     if (isTheoryActive) {
-      const units = ['Repaso parcial N° 1', 'Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5'];
-      const currentIndex = units.indexOf(currentTheoryUnit || '');
+      const currentIndex = theoryUnits.indexOf(currentTheoryUnit || '');
       const nextIndex = currentIndex + delta;
-      if (nextIndex >= 0 && nextIndex < units.length) {
-        setCurrentTheoryUnit(units[nextIndex]);
+      if (nextIndex >= 0 && nextIndex < theoryUnits.length) {
+        setCurrentTheoryUnit(theoryUnits[nextIndex]);
       }
       return;
     }
@@ -113,6 +151,8 @@ function App() {
         exams={exams}
         currentColloquiumId={currentColloquiumId}
         currentExerciseId={currentExerciseId}
+        currentSubject={currentSubject}
+        onSelectSubject={handleSelectSubject}
         onSelectExercise={handleSelectExercise}
         onShowPeriodicTable={() => {
           setIsPeriodicTableActive(true);
@@ -129,6 +169,7 @@ function App() {
         isExamsActive={isExamsActive}
         isMobileOpen={isSidebarOpen}
         currentTheoryUnit={currentTheoryUnit}
+        theoryUnits={theoryUnits}
       />
 
       <main className="flex-1 flex flex-col min-w-0">
@@ -139,7 +180,9 @@ function App() {
           </Button>
           <div className="flex items-center gap-2">
             <FlaskConical className="h-5 w-5 text-blue-500" />
-            <span className="font-black text-slate-800 tracking-tighter">QUÍMICA</span>
+            <span className="font-black text-slate-800 tracking-tighter">
+              {currentSubject === 'chemistry' ? 'QUÍMICA' : 'MATEMÁTICA'}
+            </span>
           </div>
           <div className="w-10" />
         </div>
@@ -158,7 +201,7 @@ function App() {
               />
             ) : isTheoryActive && currentTheoryUnit ? (
               <TheoryView 
-                unit={theoryData[currentTheoryUnit]} 
+                unit={currentTheoryData[currentTheoryUnit]} 
               />
             ) : (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -171,7 +214,7 @@ function App() {
 
                 <ExerciseView 
                   exercise={currentExercise} 
-                  theory={theoryData[currentExercise.category]}
+                  theory={currentTheoryData[currentExercise.category]}
                 />
                 
                 <div className="max-w-4xl mx-auto px-4 mb-12">
@@ -202,7 +245,7 @@ function App() {
               onClick={() => navigate(-1)}
               disabled={
                 isTheoryActive 
-                  ? currentTheoryUnit === 'Repaso parcial N° 1'
+                  ? currentTheoryUnit === theoryUnits[0]
                   : (currentColloquiumId === (isExamsActive ? exams[0].id : colloquiums[0].id) && currentExerciseIndex === 0)
               }
               className="gap-1 sm:gap-2 px-2 sm:px-4"
@@ -213,7 +256,7 @@ function App() {
 
             <div className="text-[10px] sm:text-sm font-medium text-slate-500">
               {isTheoryActive ? (
-                `Sección ${(['Repaso parcial N° 1', 'Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5'].indexOf(currentTheoryUnit || '') + 1)} de 5`
+                `Sección ${(theoryUnits.indexOf(currentTheoryUnit || '') + 1)} de ${theoryUnits.length}`
               ) : (
                 `Ej. ${currentExerciseIndex + 1} de ${currentColloquium.exercises.length}`
               )}
@@ -224,7 +267,7 @@ function App() {
               onClick={() => navigate(1)}
               disabled={
                 isTheoryActive
-                  ? currentTheoryUnit === 'Unidad 5'
+                  ? currentTheoryUnit === theoryUnits[theoryUnits.length - 1]
                   : (currentColloquiumId === (isExamsActive ? exams[exams.length-1].id : colloquiums[colloquiums.length-1].id) && currentExerciseIndex === currentColloquium.exercises.length - 1)
               }
               className="gap-1 sm:gap-2 px-2 sm:px-4"

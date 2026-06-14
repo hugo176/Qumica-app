@@ -6,7 +6,9 @@ import {
   Download,
   Atom,
   Image as ImageIcon,
-  X
+  X,
+  Calculator,
+  Divide
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -24,6 +26,8 @@ interface SidebarProps {
   exams: Colloquium[];
   currentColloquiumId: number;
   currentExerciseId: number;
+  currentSubject: 'chemistry' | 'math';
+  onSelectSubject: (subject: 'chemistry' | 'math') => void;
   onSelectExercise: (colId: number, exId: number, isExam?: boolean) => void;
   onShowPeriodicTable: () => void;
   onShowGallery: (colId: number) => void;
@@ -35,6 +39,7 @@ interface SidebarProps {
   isExamsActive: boolean;
   isMobileOpen?: boolean;
   currentTheoryUnit: string | null;
+  theoryUnits: string[];
 }
 
 export function Sidebar({ 
@@ -42,6 +47,8 @@ export function Sidebar({
   exams,
   currentColloquiumId, 
   currentExerciseId, 
+  currentSubject,
+  onSelectSubject,
   onSelectExercise,
   onShowPeriodicTable,
   onShowGallery,
@@ -52,7 +59,8 @@ export function Sidebar({
   isTheoryActive,
   isExamsActive,
   isMobileOpen,
-  currentTheoryUnit
+  currentTheoryUnit,
+  theoryUnits
 }: SidebarProps) {
 
   const generatePDF = (col: Colloquium) => {
@@ -90,7 +98,8 @@ export function Sidebar({
     
     doc.setFontSize(12);
     doc.setTextColor(100);
-    doc.text('Guía de Ejercicios y Resoluciones - Estudio Interactivo de Química', pageWidth / 2, 30, { align: 'center' });
+    const subjectName = currentSubject === 'chemistry' ? 'Química' : 'Matemática';
+    doc.text(`Guía de Ejercicios y Resoluciones - Estudio Interactivo de ${subjectName}`, pageWidth / 2, 30, { align: 'center' });
     
     let yPos = 45;
 
@@ -160,24 +169,61 @@ export function Sidebar({
           <X className="h-5 w-5" />
         </Button>
         <div className="flex items-center gap-3 mb-6">
-          <FlaskConical className="h-8 w-8 text-blue-400 animate-pulse" />
+          {currentSubject === 'chemistry' ? (
+            <FlaskConical className="h-8 w-8 text-blue-400 animate-pulse" />
+          ) : (
+            <Calculator className="h-8 w-8 text-emerald-400 animate-pulse" />
+          )}
           <div>
-            <h1 className="text-xl font-black tracking-tight leading-none text-white">QUÍMICA</h1>
+            <h1 className="text-xl font-black tracking-tight leading-none text-white">
+              {currentSubject === 'chemistry' ? 'QUÍMICA' : 'MATEMÁTICA'}
+            </h1>
             <p className="text-[10px] font-bold text-blue-400 uppercase tracking-widest mt-1">Estudio Interactivo</p>
           </div>
         </div>
 
-        <Button 
-          variant={isPeriodicTableActive ? "default" : "secondary"}
-          onClick={() => { onShowPeriodicTable(); onClose?.(); }}
-          className={cn(
-            "w-full justify-center gap-3 h-11 text-sm font-bold transition-all",
-            isPeriodicTableActive ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-700 text-slate-300"
-          )}
-        >
-          <Atom className="h-4 w-4" />
-          Tabla Periódica
-        </Button>
+        <div className="flex gap-2 mb-4 p-1 bg-slate-800 rounded-lg">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onSelectSubject('chemistry')}
+            className={cn(
+              "flex-1 text-[10px] font-bold uppercase tracking-wider h-8 transition-all",
+              currentSubject === 'chemistry' 
+                ? "bg-blue-600 text-white shadow-lg" 
+                : "text-slate-400 hover:text-white hover:bg-slate-700"
+            )}
+          >
+            Química
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onSelectSubject('math')}
+            className={cn(
+              "flex-1 text-[10px] font-bold uppercase tracking-wider h-8 transition-all",
+              currentSubject === 'math' 
+                ? "bg-emerald-600 text-white shadow-lg" 
+                : "text-slate-400 hover:text-white hover:bg-slate-700"
+            )}
+          >
+            Matemática
+          </Button>
+        </div>
+
+        {currentSubject === 'chemistry' && (
+          <Button 
+            variant={isPeriodicTableActive ? "default" : "secondary"}
+            onClick={() => { onShowPeriodicTable(); onClose?.(); }}
+            className={cn(
+              "w-full justify-center gap-3 h-11 text-sm font-bold transition-all",
+              isPeriodicTableActive ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-700 text-slate-300"
+            )}
+          >
+            <Atom className="h-4 w-4" />
+            Tabla Periódica
+          </Button>
+        )}
       </div>
 
       <ScrollArea className="flex-1 px-4 py-4">
@@ -244,11 +290,11 @@ export function Sidebar({
                           className={cn(
                             "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
                             !isPeriodicTableActive && !isExamsActive && currentColloquiumId === col.id && currentExerciseId === ex.id
-                              ? "bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                              ? (currentSubject === 'chemistry' ? "bg-blue-600 text-white shadow-md shadow-blue-900/20" : "bg-emerald-600 text-white shadow-md shadow-emerald-900/20")
                               : "hover:bg-slate-800 text-slate-400 hover:text-white"
                           )}
                         >
-                          Problema {ex.id}: {ex.title}
+                          {currentSubject === 'chemistry' ? 'Problema' : 'Ejercicio'} {ex.id}: {ex.title}
                         </button>
                       ))}
                     </div>
@@ -258,74 +304,76 @@ export function Sidebar({
             </Accordion>
           </section>
 
-          <section>
-            <div className="px-2 mb-3 flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-              <FlaskConical className="h-3 w-3" />
-              Modelos de Parciales
-            </div>
-            
-            <Accordion 
-              type="single" 
-              collapsible 
-              defaultValue={isExamsActive ? `item-${currentColloquiumId}` : undefined}
-              className="w-full"
-            >
-              {exams.map((exam) => (
-                <AccordionItem key={exam.id} value={`item-${exam.id}`} className="border-slate-800">
-                  <div className="flex items-center group pr-2">
-                    <AccordionTrigger className="flex-1 hover:no-underline hover:text-blue-400 py-3 text-sm font-bold text-left">
-                      {exam.name}
-                    </AccordionTrigger>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-slate-500 hover:text-blue-400 hover:bg-slate-800 shrink-0"
-                      title="Descargar PDF"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        generatePDF(exam);
-                      }}
-                    >
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <AccordionContent>
-                    <div className="flex flex-col gap-1 pl-2 pb-2">
-                      {exam.exercises.map((ex) => (
-                        <button
-                          key={ex.id}
-                          onClick={() => { onSelectExercise(exam.id, ex.id, true); onClose?.(); }}
-                          className={cn(
-                            "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
-                            !isPeriodicTableActive && isExamsActive && currentColloquiumId === exam.id && currentExerciseId === ex.id
-                              ? "bg-blue-600 text-white shadow-md shadow-blue-900/20"
-                              : "hover:bg-slate-800 text-slate-400 hover:text-white"
-                          )}
-                        >
-                          Problema {ex.id}: {ex.title}
-                        </button>
-                      ))}
+          {exams.length > 0 && (
+            <section>
+              <div className="px-2 mb-3 flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                <FlaskConical className="h-3 w-3" />
+                Modelos de Parciales
+              </div>
+              
+              <Accordion 
+                type="single" 
+                collapsible 
+                defaultValue={isExamsActive ? `item-${currentColloquiumId}` : undefined}
+                className="w-full"
+              >
+                {exams.map((exam) => (
+                  <AccordionItem key={exam.id} value={`item-${exam.id}`} className="border-slate-800">
+                    <div className="flex items-center group pr-2">
+                      <AccordionTrigger className="flex-1 hover:no-underline hover:text-blue-400 py-3 text-sm font-bold text-left">
+                        {exam.name}
+                      </AccordionTrigger>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-slate-500 hover:text-blue-400 hover:bg-slate-800 shrink-0"
+                        title="Descargar PDF"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          generatePDF(exam);
+                        }}
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </section>
+                    <AccordionContent>
+                      <div className="flex flex-col gap-1 pl-2 pb-2">
+                        {exam.exercises.map((ex) => (
+                          <button
+                            key={ex.id}
+                            onClick={() => { onSelectExercise(exam.id, ex.id, true); onClose?.(); }}
+                            className={cn(
+                              "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
+                              !isPeriodicTableActive && isExamsActive && currentColloquiumId === exam.id && currentExerciseId === ex.id
+                                ? (currentSubject === 'chemistry' ? "bg-blue-600 text-white shadow-md shadow-blue-900/20" : "bg-emerald-600 text-white shadow-md shadow-emerald-900/20")
+                                : "hover:bg-slate-800 text-slate-400 hover:text-white"
+                            )}
+                          >
+                            Problema {ex.id}: {ex.title}
+                          </button>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </section>
+          )}
 
           <section>
             <div className="px-2 mb-3 flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">
-              <FlaskConical className="h-3 w-3" />
+              {currentSubject === 'chemistry' ? <FlaskConical className="h-3 w-3" /> : <Divide className="h-3 w-3" />}
               Teoría
             </div>
             <div className="flex flex-col gap-1 px-1">
-              {['Repaso parcial N° 1', 'Unidad 2', 'Unidad 3', 'Unidad 4', 'Unidad 5'].map((unit) => (
+              {theoryUnits.map((unit) => (
                 <button
                   key={unit}
                   onClick={() => { onSelectTheory(unit); onClose?.(); }}
                   className={cn(
                     "text-left px-3 py-2 rounded-md text-xs font-bold transition-colors",
                     isTheoryActive && currentTheoryUnit === unit
-                      ? "bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                      ? (currentSubject === 'chemistry' ? "bg-blue-600 text-white shadow-md shadow-blue-900/20" : "bg-emerald-600 text-white shadow-md shadow-emerald-900/20")
                       : "hover:bg-slate-800 text-slate-400 hover:text-white"
                   )}
                 >
