@@ -9,6 +9,7 @@ import { exam2 } from './data/chemistry/exams/exam-2';
 import { theoryData } from './data/chemistry/theory';
 import { elements } from './data/chemistry/elements';
 import { Sidebar } from './components/layout/Sidebar';
+import type { Colloquium, Exercise } from './types';
 import { ExerciseView } from './components/exercise/ExerciseView';
 import { PeriodicTable } from './components/periodic-table/PeriodicTable';
 import { QuizView } from './components/quiz/QuizView';
@@ -54,11 +55,11 @@ function App() {
 
   const currentColloquium = useMemo(() => {
     const list = isExamsActive ? exams : colloquiums;
-    return list.find(c => c.id === currentColloquiumId) || list[0];
+    return list.find((c: Colloquium) => c.id === currentColloquiumId) || list[0];
   }, [currentColloquiumId, isExamsActive, colloquiums, exams]);
 
   const currentExerciseIndex = useMemo(() => 
-    currentColloquium.exercises.findIndex((ex: any) => ex.id === currentExerciseId),
+    currentColloquium.exercises.findIndex((ex: Exercise) => ex.id === currentExerciseId),
   [currentColloquium, currentExerciseId]);
 
   const currentExercise = currentColloquium.exercises[currentExerciseIndex] || currentColloquium.exercises[0];
